@@ -35,7 +35,7 @@ jobs:
           OSS_ACCESS_KEY_SECRET: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
         run: |
           # 直接使用命令行参数，避免配置步骤
-          sudo ossutil cp -r . oss://cn-rdk-front-prod/rdk_doc/ \
+          sudo ossutil cp -r . oss://cn-rdk-front-prod/model_zoo_doc/ \
           -e https://d-robotics.cc \
           -i $OSS_ACCESS_KEY_ID \
           -k $OSS_ACCESS_KEY_SECRET \
