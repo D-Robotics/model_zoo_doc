@@ -1,71 +1,143 @@
-# RDK DOC Maintenance Guide
+[English](./README_EN.md) | 简体中文
 
-English | [简体中文](./README.md)
+# 文档仓库
 
-## 1. Dependency Installation
+本仓库是 Model Zoo 开发文档站点源码，基于 Docusaurus 构建，包含中文主文档、英文文档翻译、站点主题定制、文档范围过滤（Doc Scope）和自动化发布流程。
 
-### Requirements
+文档站核心能力包括：
+- 多语言文档（`zh-Hans` / `en`）
+- 按产品和版本筛选文档内容（`DOC_BUILD_PRODUCT`、`DOC_BUILD_VERSION`）
+- 自动生成并监听侧边栏范围配置
+- GitHub Pages 构建发布与 OSS 同步
 
-- Node.js >= 18
-- npm (bundled with Node.js)
+## 仓库结构概览
 
-### Install
+主要目录说明如下：
 
-For first-time setup or daily local development:
+- `docs/`：中文文档主内容
+- `i18n/en/docusaurus-plugin-content-docs/current/`：英文文档内容
+- `scripts/`：文档维护与构建辅助脚本（编号、链接修复、范围构建等）
+- `src/`：主题定制、插件与 remark 扩展
+- `static/`：静态资源
+- `.github/workflows/`：CI/CD 工作流（Pages 部署与 OSS 同步）
+- `docusaurus.config.js`：站点主配置
+- `sidebars.js`：文档侧边栏配置入口
+
+## 环境准备
+
+- Node.js：`>= 18`
+- 包管理：`npm`
 
 ```bash
+# 安装依赖（推荐：CI 和本地统一使用）
+npm ci
+
+# 或：日常开发快速安装（会按 semver 更新依赖）
 npm install
 ```
 
-For CI or strictly locked dependency installation:
+## 文档维护流程
+
+推荐按以下顺序执行：
 
 ```bash
-npm ci
+# 1) 修改文档内容
+# 中文目录：docs/
+# 英文目录：i18n/en/docusaurus-plugin-content-docs/current/
+
+# 2) 仅重排 docs/ 下 Markdown 文件编号（按需）
+npm run renumber-docs-md
+
+# 3) 重排 docs/ 下目录 + Markdown 编号（按需，影响较大，谨慎执行）
+node scripts/renumber-docs-and-folders.js
+
+# 4) 重排英文目录（可选，只有英文目录也需要调整时执行）
+node scripts/renumber-docs-and-folders.js i18n/en/docusaurus-plugin-content-docs/current
+
+# 5) 修复 docs/ 下受重命名影响的相对 Markdown 链接（按需）
+npm run fix-relative-docs-links
+
+# 6) 生成/更新侧边栏范围配置
+npm run generate-sidebar-config
+
+# 7) 本地预览（中文）
+npm run start
+
+# 8) 本地预览（英文）
+npm run start:en
+
+# 9) 提交前执行完整构建校验
+npm run build
+
+# 10) 本地托管 build 产物进行验证
+npm run serve
 ```
 
-## 2. Documentation Maintenance Workflow
+## 维护常用命令
 
-1. Update Chinese docs in `docs/`.
-2. Update English docs in `i18n/en/docusaurus-plugin-content-docs/current/`.
-3. If you changed visibility scope (`sidebar_versions`, `sidebar_products`, `_sidebar_scope.json`, `DocScope`), regenerate config once:
+### 内容与结构维护
 
-   ```bash
-   npm run generate-sidebar-config
-   ```
+```bash
+# 谨慎执行以下操作
 
-   Or run:
+# 按 sidebar_position 重排 docs/ 下 Markdown 编号
+npm run renumber-docs-md
 
-   ```bash
-   npm run start
-   ```
+# 重排目录 + Markdown，并尝试批量修复仓库路径引用
+node scripts/renumber-docs-and-folders.js
 
-4. Verify locally (Chinese or English):
-   - Chinese: `npm run start`
-   - English: `npm run start:en`
-5. Run full build check before commit:
+# 重排英文文档目录（可选）
+node scripts/renumber-docs-and-folders.js i18n/en/docusaurus-plugin-content-docs/current
 
-   ```bash
-   npm run build
-   ```
+# 修复 docs/ 下受重命名影响的相对链接
+npm run fix-relative-docs-links
 
-6. Preview build artifacts locally when needed:
+# 生成侧边栏范围配置（Doc Scope）
+npm run generate-sidebar-config
 
-   ```bash
-   npm run serve
-   ```
+# 开发时监听文档变化，自动更新侧边栏范围配置
+npm run watch-sidebar-config
+```
 
-## 3. Common Maintenance Commands
+### 本地运行
 
-| Command | Purpose |
-|---|---|
-| `npm run generate-sidebar-config` | Manually generate sidebar visibility scope config |
-| `npm run watch-sidebar-config` | Watch doc changes and auto-update scope config |
-| `npm run start` | Start Chinese docs dev server (with config watch) |
-| `npm run start:en` | Start English docs dev server (with config watch) |
-| `npm run start:no-watch` | Start Chinese docs without config watch |
-| `npm run start:no-watch:en` | Start English docs without config watch |
-| `npm run start:port` | Start Chinese docs on port 3001 (with config watch) |
-| `npm run build` | Production build (includes sidebar config generation) |
-| `npm run serve` | Preview build artifacts locally |
-| `npm run deploy` | Build and deploy to GitHub Pages |
+```bash
+# 中文开发模式（包含侧边栏配置监听）
+npm run start
+
+# 英文开发模式（包含侧边栏配置监听）
+npm run start:en
+
+# 中文开发模式，使用 3001 端口
+npm run start:port
+
+# 中文开发模式（不启动监听）
+npm run start:no-watch
+
+# 英文开发模式（不启动监听）
+npm run start:no-watch:en
+
+# 清理 Docusaurus 缓存
+npm run clear
+```
+
+### 构建与产物验证
+
+```bash
+# 标准全量构建
+npm run build
+
+# 本地预览 build 目录
+npm run serve
+
+# 指定 host 和 port 预览（示例）
+npm run serve -- --host=10.64.62.34 --port=1688 --no-open
+
+```
+
+常见访问路径（端口以实际 `serve` 输出为准）：
+- 英文：`http://localhost:3000/en/model_zoo_doc/model_zoo_intro`
+- 中文：`http://localhost:3000/model_zoo_doc/model_zoo_intro`
+
+
 
