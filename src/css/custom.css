@@ -1186,15 +1186,16 @@ mark.search-highlight {
 }
 
 /* ------------------------------------------------------------------ */
-/* 文档正文表格铺满正文容器（docs / MDX）。
- * Infima 默认 table{display:block} 会使表格收缩为内容宽度；改为 table 布局并拉满宽度。 */
+/* 文档正文表格：占满正文内容区，不侵入 TOC；超宽时表格自身横向滚动。 */
 .theme-doc-markdown.markdown table,
 article.markdown table,
 main .container article table,
 main article table {
-  display: table;
+  display: block;
   width: 100% !important;
   max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
   box-sizing: border-box;
   border-collapse: collapse;
 }
