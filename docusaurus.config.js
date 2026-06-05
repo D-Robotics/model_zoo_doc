@@ -137,6 +137,13 @@ const config = {
     ],
   ],
   plugins: [
+    [
+      "docusaurus-plugin-copy-page-button",
+      {
+        placement: "toc",
+        enabledActions: ["copy", "view"],
+      },
+    ],
     require.resolve("./src/plugins/sidebar-scope-config-plugin"),
   ],
   markdown: {
