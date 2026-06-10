@@ -138,6 +138,7 @@ const config = {
   ],
   plugins: [
     require.resolve("./src/plugins/sidebar-scope-config-plugin"),
+    "docusaurus-plugin-image-zoom",
     [
       "docusaurus-plugin-copy-page-button",
       {
@@ -253,6 +254,17 @@ const config = {
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
+      },
+      zoom: {
+        selector: ".markdown img",
+        background: {
+          light: "rgb(255, 255, 255)",
+          dark: "rgb(50, 50, 50)",
+        },
+        config: {
+          margin: 24,
+          scrollOffset: 80,
+        },
       },
     }),
   themes: [
