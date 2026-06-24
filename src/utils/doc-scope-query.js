@@ -68,13 +68,16 @@ export function docScopeSearchMatches(search, version, product) {
   return params.get('v') === version && params.get('p') === product;
 }
 
-export function appendDocScopeToHref(href, version, product, origin) {
+export function appendDocScopeToHref(href, version, product, origin, baseUrl = '/') {
   if (!href || !version || !product) {
     return href;
   }
   try {
     const url = new URL(href, origin);
     if (url.origin !== origin) {
+      return href;
+    }
+    if (isModelZooIntroPath(url.pathname, baseUrl)) {
       return href;
     }
     url.searchParams.set('v', version);
