@@ -41,3 +41,13 @@ sidebar_position: 1
 | S100P | YOLOv8n CLS | 640×640 | 80 | 0.38 | 2470.91 | 0.45 | 4304.69 | 0.5 | 2.7 M | 4.3 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo) |
 | S100P | YOLOv8s CLS | 640×640 | 80 | 0.49 | 1953.98 | 0.57 | 3364.17 | 0.5 | 6.4 M | 13.5 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo) |
 | S100P | YOLOv8x CLS | 640×640 | 80 | 2.09 | 470.34 | 3.55 | 559.63 | 0.5 | 57.4 M | 154.8 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo) |
+
+## Accuracy (YOLO26)
+
+| Device | Model | Top-1 BPU Python | Top-5 BPU Python |
+| --- | --- | --- | --- |
+| S100 | YOLO26n Cls | 0.6165 | 0.8359 |
+| S100 | YOLO26s Cls | 0.6854 | 0.8853 |
+| S100 | YOLO26m Cls | 0.7194 | 0.9080 |
+| S100 | YOLO26l Cls | 0.7369 | 0.9168 |
+| S100 | YOLO26x Cls | 0.7432 | 0.9222 |

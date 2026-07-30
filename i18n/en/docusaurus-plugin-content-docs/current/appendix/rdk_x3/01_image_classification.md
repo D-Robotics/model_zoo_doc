@@ -2,11 +2,11 @@
 sidebar_position: 1
 ---
 
-# 图像分类
+# Image Classification
 
 
 
-| Model | 输入尺寸 | 类别数 | 参数量(M) | Float Top-1 | Quant Top-1 | 单线程延迟(ms) | 多线程延迟(ms) | FPS | GitHub仓库 |
+| Model | Input Size | Classes | Parameters (M) | Float Top-1 | Quantized Top-1 | Single-thread Latency (ms) | Multi-thread Latency (ms) | FPS | GitHub Repository |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | GoogLeNet | 224x224 | 1000 | 6.81 | 68.72% | 67.71% | 8.34 | 16.29 | 243.51 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x3/demos/classification/GoogLeNet) |
 | Mobilenetv4 | 224x224 | 1000 | 3.76 | 70.50% | 70.26% | 1.43 | 2.96 | 1309.17 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x3/demos/classification/MobileNetV4) |

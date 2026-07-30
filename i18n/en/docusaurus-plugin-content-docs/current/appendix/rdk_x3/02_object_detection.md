@@ -2,11 +2,11 @@
 sidebar_position: 2
 ---
 
-# 目标检测
+# Object Detection
 
 
 
-| Model | 输入尺寸 | 类别数 | 参数量 | BPU吞吐量(FPS) | 后处理时间(ms) | GitHub仓库 |
+| Model | Input Size | Classes | Parameters | BPU Throughput (FPS) | Post-processing Time (ms) | GitHub Repository |
 | --- | --- | --- | --- | --- | --- | --- |
 | fcos | 512x512 | 80 | - | 173.9 | 5 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x3/demos/detect/FCOS) |
 | YOLOv5s_v2.0 | 640x640 | 80 | 7.5 M | 38.2 | 13 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x3/demos/detect/YOLOv5) |

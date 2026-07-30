@@ -49,3 +49,13 @@ sidebar_position: 3
 | S100P | YOLOv8x Seg | 640×640 | 80 | 13.01 | 76.23 | 25.11 | 79.06 | 5.0 | 71.8 M | 344.1 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo) |
 | S100P | YOLOv9c Seg | 640×640 | 80 | 6.29 | 156.58 | 11.74 | 168.32 | 5.0 | 27.7 M | 158.0 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo) |
 | S100P | YOLOv9e Seg | 640×640 | 80 | 14.20 | 69.78 | 27.42 | 72.35 | 5.0 | 59.7 M | 244.8 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo) |
+
+## Accuracy (YOLO26 Segmentation Masks)
+
+| Device | Model | mask-all BPU Python | mask-small BPU Python | mask-medium BPU Python | mask-large BPU Python |
+| --- | --- | --- | --- | --- | --- |
+| S100 | YOLO26n Seg | 0.254 | 0.057 | 0.269 | 0.434 |
+| S100 | YOLO26s Seg | 0.330 | 0.119 | 0.367 | 0.510 |
+| S100 | YOLO26m Seg | 0.356 | 0.148 | 0.399 | 0.536 |
+| S100 | YOLO26l Seg | 0.375 | 0.164 | 0.419 | 0.560 |
+| S100 | YOLO26x Seg | 0.381 | 0.176 | 0.426 | 0.576 |

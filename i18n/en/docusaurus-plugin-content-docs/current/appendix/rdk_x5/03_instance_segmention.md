@@ -2,9 +2,9 @@
 sidebar_position: 3
 ---
 
-# 实例分割
+# Instance Segmentation
 
-| Model | 输入尺寸 | 类别数 | 单线程延迟(ms) | 单线程FPS | 双线程延迟(ms) | 双线程FPS | CPU延迟(ms) | 参数量(M) | FLOPs(B) | PyTorch Box/Mask | Python Box/Mask | GitHub仓库 |
+| Model | Input Size | Classes | Single-thread Latency (ms) | Single-thread FPS | Two-thread Latency (ms) | Two-thread FPS | CPU Latency (ms) | Parameters (M) | FLOPs (B) | PyTorch Box/Mask | Python Box/Mask | GitHub Repository |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | yolov8n-seg | 640x640 | 80 | 10.4 | 96.0 | 10.9 | 181.9 | 20 | 3.4 | 12.6 | 0.300/0.241 | 0.284/0.219 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/ultralytics_yolo) |
 | yolov8s-seg | 640x640 | 80 | 19.6 | 50.9 | 29.0 | 68.7 | 20 | 11.8 | 42.6 | 0.380/0.299 | 0.371/0.287 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/ultralytics_yolo) |

@@ -33,3 +33,13 @@ sidebar_position: 4
 | S100P | YOLOv8n Pose | 640×640 | 80 | 1.14 | 822.46 | 1.58 | 1206.58 | 1.0 | 3.3 M | 9.2 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo) |
 | S100P | YOLOv8s Pose | 640×640 | 80 | 1.97 | 486.85 | 3.23 | 606.41 | 1.0 | 11.6 M | 30.2 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo) |
 | S100P | YOLOv8x Pose | 640×640 | 80 | 10.67 | 92.89 | 20.48 | 96.97 | 1.0 | 69.4 M | 263.2 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo) |
+
+## 精度（YOLO26）
+
+| Device | Model | pose-all BPU Python | pose-medium BPU Python | pose-large BPU Python |
+| --- | --- | --- | --- | --- |
+| S100 | YOLO26n Pose | 0.504 | 0.412 | 0.647 |
+| S100 | YOLO26s Pose | 0.575 | 0.498 | 0.697 |
+| S100 | YOLO26m Pose | 0.620 | 0.554 | 0.737 |
+| S100 | YOLO26l Pose | 0.646 | 0.579 | 0.744 |
+| S100 | YOLO26x Pose | 0.663 | 0.601 | 0.775 |

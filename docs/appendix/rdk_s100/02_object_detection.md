@@ -93,3 +93,13 @@ sidebar_position: 2
 | S100P | YOLO26m Detect | 640x640 | 80 | - | - | - | - | - | 21.90 | 75.4 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo26) |
 | S100P | YOLO26l Detect | 640x640 | 80 | - | - | - | - | - | 26.30 | 93.8 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo26) |
 | S100P | YOLO26x Detect | 640x640 | 80 | - | - | - | - | - | 58.99 | 209.5 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo_s/tree/s100/samples/Vision/ultralytics_yolo26) |
+
+## 精度（YOLO26）
+
+| Device | Model | bbox-all BPU Python | bbox-small BPU Python | bbox-medium BPU Python | bbox-large BPU Python |
+| --- | --- | --- | --- | --- | --- |
+| S100 | YOLO26n Detect | 0.286 | 0.083 | 0.304 | 0.473 |
+| S100 | YOLO26s Detect | 0.362 | 0.163 | 0.402 | 0.524 |
+| S100 | YOLO26m Detect | 0.413 | 0.202 | 0.456 | 0.603 |
+| S100 | YOLO26l Detect | 0.440 | 0.230 | 0.489 | 0.623 |
+| S100 | YOLO26x Detect | 0.449 | 0.246 | 0.488 | 0.646 |

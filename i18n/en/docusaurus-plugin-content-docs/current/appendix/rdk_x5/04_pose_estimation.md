@@ -2,9 +2,9 @@
 sidebar_position: 4
 ---
 
-# 姿态估计
+# Pose Estimation
 
-| Model | 输入尺寸 | 单线程延迟(ms) | 单线程FPS | 双线程延迟(ms) | 双线程FPS | CPU延迟(ms) | 参数量(M) | FLOPs(B) | PyTorch AP | Python AP | GitHub仓库 |
+| Model | Input Size | Single-thread Latency (ms) | Single-thread FPS | Two-thread Latency (ms) | Two-thread FPS | CPU Latency (ms) | Parameters (M) | FLOPs (B) | PyTorch AP | Python AP | GitHub Repository |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | yolov8n-pose | 640x640 | 7.0 | 143.1 | 8.2 | 241.8 | 10 | 3.3 | 9.2 | 0.476 | 0.462 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/ultralytics_yolo) |
 | yolov8s-pose | 640x640 | 14.1 | 70.6 | 22.6 | 88.2 | 10 | 11.6 | 30.2 | 0.578 | 0.553 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/ultralytics_yolo) |
