@@ -210,6 +210,7 @@ bash run.sh
 | FasterNet | `samples/vision/fasternet` |
 | FastViT | `samples/vision/fastvit` |
 | GoogLeNet | `samples/vision/googlenet` |
+| HGNetV2 | `samples/vision/hgnetv2` |
 | MobileNetV1 | `samples/vision/mobilenetv1` |
 | MobileNetV2 | `samples/vision/mobilenetv2` |
 | MobileNetV3 | `samples/vision/mobilenetv3` |
@@ -237,6 +238,25 @@ bash run.sh
 | :--- | :--- |
 | YOLOE | `samples/vision/yoloe` |
 | MODNet | `samples/vision/modnet` |
+
+### Promptable Segmentation
+
+| Model | Sample Directory |
+| :--- | :--- |
+| EfficientSAM-Tiny | `samples/vision/efficient_sam` |
+| MobileSAM | `samples/vision/mobile_sam` |
+
+### Semantic Segmentation
+
+| Model | Sample Directory |
+| :--- | :--- |
+| PP-LiteSeg-STDC1 | `samples/vision/pp_liteseg` |
+
+### Monocular Depth Estimation
+
+| Model | Sample Directory |
+| :--- | :--- |
+| YOLO26 Depth | `samples/vision/yolo26_depth` |
 
 ### OCR / Recognition
 

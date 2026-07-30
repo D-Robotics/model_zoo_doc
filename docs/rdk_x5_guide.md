@@ -210,6 +210,7 @@ bash run.sh
 | FasterNet | `samples/vision/fasternet` |
 | FastViT | `samples/vision/fastvit` |
 | GoogLeNet | `samples/vision/googlenet` |
+| HGNetV2 | `samples/vision/hgnetv2` |
 | MobileNetV1 | `samples/vision/mobilenetv1` |
 | MobileNetV2 | `samples/vision/mobilenetv2` |
 | MobileNetV3 | `samples/vision/mobilenetv3` |
@@ -237,6 +238,25 @@ bash run.sh
 | :--- | :--- |
 | YOLOE | `samples/vision/yoloe` |
 | MODNet | `samples/vision/modnet` |
+
+### 提示词分割
+
+| 模型 | Sample 目录 |
+| :--- | :--- |
+| EfficientSAM-Tiny | `samples/vision/efficient_sam` |
+| MobileSAM | `samples/vision/mobile_sam` |
+
+### 语义分割
+
+| 模型 | Sample 目录 |
+| :--- | :--- |
+| PP-LiteSeg-STDC1 | `samples/vision/pp_liteseg` |
+
+### 单目深度估计
+
+| 模型 | Sample 目录 |
+| :--- | :--- |
+| YOLO26 Depth | `samples/vision/yolo26_depth` |
 
 ### OCR / 识别
 

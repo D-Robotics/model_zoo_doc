@@ -237,6 +237,7 @@ bash run.sh
 | 类别 | 模型 | Sample 目录 | 支持平台 |
 | :--- | :--- | :--- | :--- |
 | 语音识别 | ASR（Wav2Vec2） | `samples/speech/asr` | S100 / S600 |
+| 语音识别 | Paraformer（中文 ASR，WAV 输入，三段 INT16 HBM） | `samples/speech/paraformer` | S100 |
 | 关键词检测 | KWS（MDTC） | `samples/speech/kws` | S100 |
 
 ### 具身智能 / 机器人策略（VLA）

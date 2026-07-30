@@ -237,6 +237,7 @@ bash run.sh
 | Category | Model | Sample Directory | Supported Platforms |
 | :--- | :--- | :--- | :--- |
 | Speech Recognition | ASR (Wav2Vec2) | `samples/speech/asr` | S100 / S600 |
+| Speech Recognition | Paraformer (Chinese ASR, WAV input, three-stage INT16 HBM) | `samples/speech/paraformer` | S100 |
 | Keyword Spotting | KWS (MDTC) | `samples/speech/kws` | S100 |
 
 ### Embodied AI / Robot Policy (VLA)
