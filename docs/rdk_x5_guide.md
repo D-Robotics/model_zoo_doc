@@ -3,7 +3,7 @@ sidebar_position: 3
 sidebar_products: "RDK-X5"
 ---
 
-# 4.1.3 RDK X5 Model Zoo 使用说明
+# 4.1.3 使用说明
 
 ## 分支与系统要求
 
@@ -32,6 +32,7 @@ rdk_model_zoo/
 |       |-- clip/                 # 图文多模态匹配
 |       |-- convnext/             # 图像分类
 |       |-- edgenext/             # 图像分类
+|       |-- efficient_sam/        # 提示词分割
 |       |-- efficientformer/      # 图像分类
 |       |-- efficientformerv2/    # 图像分类
 |       |-- efficientnet/         # 图像分类
@@ -40,19 +41,23 @@ rdk_model_zoo/
 |       |-- fastvit/              # 图像分类
 |       |-- fcos/                 # 目标检测
 |       |-- googlenet/            # 图像分类
+|       |-- hgnetv2/              # 图像分类
 |       |-- lprnet/               # 车牌识别
+|       |-- mobile_sam/           # 提示词分割
 |       |-- mobilenetv1/          # 图像分类
 |       |-- mobilenetv2/          # 图像分类
 |       |-- mobilenetv3/          # 图像分类
 |       |-- mobilenetv4/          # 图像分类
 |       |-- mobileone/            # 图像分类
 |       |-- modnet/               # 图像抠图
+|       |-- pp_liteseg/           # 语义分割
 |       |-- paddleocr/            # OCR 文字检测与识别
 |       |-- repghost/             # 图像分类
 |       |-- repvgg/               # 图像分类
 |       |-- repvit/               # 图像分类
 |       |-- resnet/               # 图像分类
 |       |-- resnext/              # 图像分类
+|       |-- yolo26_depth/         # 单目深度估计
 |       |-- ultralytics_yolo/     # 检测、分割、姿态、分类
 |       |-- ultralytics_yolo26/   # 检测、分割、姿态、OBB、分类
 |       |-- vargconvnet/          # 图像分类

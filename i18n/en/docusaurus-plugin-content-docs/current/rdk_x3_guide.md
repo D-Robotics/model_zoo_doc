@@ -3,7 +3,7 @@ sidebar_position: 2
 sidebar_products: "RDK-X3"
 ---
 
-# 4.1.2 RDK X3 Model Zoo Usage Guide
+# 4.1.2 Usage Guide
 
 ## Branch and System Requirements
 

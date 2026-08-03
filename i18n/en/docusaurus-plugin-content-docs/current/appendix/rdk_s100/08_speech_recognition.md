@@ -19,6 +19,7 @@ sidebar_position: 8
 | Paraformer-large-contextual | Encoder | 33.63 ms | 33.15 ms | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/speech/paraformer) |
 | Paraformer-large-contextual | Predictor | 1.44 ms | 1.00 ms | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/speech/paraformer) |
 | Paraformer-large-contextual | CPU CIF | 3.41 ms | 0.38 ms | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/speech/paraformer) |
+| Paraformer-large-contextual | Decoder | 7.12 ms | 6.29 ms | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/speech/paraformer) |
 | Paraformer-large-contextual | End-to-end | 45.61 ms | 40.81 ms | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/speech/paraformer) |
 | Paraformer-large-contextual | RTF | 0.008 | 0.007 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/speech/paraformer) |
 

@@ -3,7 +3,7 @@ sidebar_position: 4
 sidebar_products: "RDK S100/S600"
 ---
 
-# 4.1.4 RDK S Model Zoo Usage Guide
+# 4.1.4 Usage Guide
 
 ## Branch and System Requirements
 

@@ -3,7 +3,7 @@ sidebar_position: 3
 sidebar_products: "RDK-X5"
 ---
 
-# 4.1.3 RDK X5 Model Zoo Usage Guide
+# 4.1.3 Usage Guide
 
 ## Branch and System Requirements
 
@@ -32,6 +32,7 @@ rdk_model_zoo/
 |       |-- clip/                 # Image-text multimodal matching
 |       |-- convnext/             # Image classification
 |       |-- edgenext/             # Image classification
+|       |-- efficient_sam/        # Promptable segmentation
 |       |-- efficientformer/      # Image classification
 |       |-- efficientformerv2/    # Image classification
 |       |-- efficientnet/         # Image classification
@@ -40,19 +41,23 @@ rdk_model_zoo/
 |       |-- fastvit/              # Image classification
 |       |-- fcos/                 # Object detection
 |       |-- googlenet/            # Image classification
+|       |-- hgnetv2/              # Image classification
 |       |-- lprnet/               # License plate recognition
+|       |-- mobile_sam/           # Promptable segmentation
 |       |-- mobilenetv1/          # Image classification
 |       |-- mobilenetv2/          # Image classification
 |       |-- mobilenetv3/          # Image classification
 |       |-- mobilenetv4/          # Image classification
 |       |-- mobileone/            # Image classification
 |       |-- modnet/               # Image matting
+|       |-- pp_liteseg/           # Semantic segmentation
 |       |-- paddleocr/            # OCR text detection and recognition
 |       |-- repghost/             # Image classification
 |       |-- repvgg/               # Image classification
 |       |-- repvit/               # Image classification
 |       |-- resnet/               # Image classification
 |       |-- resnext/              # Image classification
+|       |-- yolo26_depth/         # Monocular depth estimation
 |       |-- ultralytics_yolo/     # Detection, segmentation, pose, classification
 |       |-- ultralytics_yolo26/   # Detection, segmentation, pose, OBB, classification
 |       |-- vargconvnet/          # Image classification

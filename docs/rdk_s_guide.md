@@ -3,7 +3,7 @@ sidebar_position: 4
 sidebar_products: "RDK S100, RDK S600"
 ---
 
-# 4.1.4 RDK S Model Zoo 使用说明
+# 4.1.4 使用说明
 
 ## 分支与系统要求
 
