@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-# 目标检测
+# Object Detection
 
-| Model | 输入尺寸 | 类别数 | 单线程延迟(ms) | 单线程FPS | 双线程延迟(ms) | 双线程FPS | CPU延迟(ms) | 参数量(M) | FLOPs(B) | PyTorch AP | Python AP | GitHub仓库 |
+| Model | Input Size | Classes | Single-thread Latency (ms) | Single-thread FPS | Two-thread Latency (ms) | Two-thread FPS | CPU Latency (ms) | Parameters (M) | FLOPs (B) | PyTorch AP | Python AP | GitHub Repository |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | fcos_efficientnetb0 | 512x512 | 80 | 3.3 | 298.0 | 6.2 | 323.0 | 9 | - | - | - | - | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/fcos) |
 | fcos_efficientnetb2 | 768x768 | 80 | 14.4 | 69.5 | 28.1 | 70.9 | 16 | - | - | - | - | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/fcos) |

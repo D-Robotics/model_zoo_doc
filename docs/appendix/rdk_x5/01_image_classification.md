@@ -29,6 +29,11 @@ sidebar_position: 1
 | fastvit_s12 | 256x256 | 8.82 | 79.88% | 78.77% | 4.47 | 818.1 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/fastvit) |
 | fastvit_sa24 | 256x256 | 20.59 | 82.73% | 81.73% | 11.06 | 340.7 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/fastvit) |
 | googlenet | 224x224 | 6.81 | 68.72% | 67.71% | 2.19 | 626.27 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/googlenet) |
+| HGNetv2_b0 | 224x224 | 6.0 | 77.342% | 72.17% | 1.96 | 902.09 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/hgnetv2) |
+| HGNetv2_b1 | 224x224 | 6.34 | 78.872% | 73.47% | 2.41 | 760.13 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/hgnetv2) |
+| HGNetv2_b2 | 224x224 | 11.2 | 81.578% | 75.55% | 3.52 | 401.16 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/hgnetv2) |
+| HGNetv2_b3 | 224x224 | 16.3 | 82.916% | 76.51% | 4.53 | 287.27 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/hgnetv2) |
+| HGNetv2_b4 | 224x224 | 19.8 | 83.694% | 81.93% | 5.29 | 241.94 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/hgnetv2) |
 | mobilenetv1 | 224x224 | - | 71.7% | 65.4% | 0.58 | 2800+ | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/mobilenetv1) |
 | mobilenetv2 | 224x224 | - | 71.0% | 69.0% | 0.66 | 1515+ | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/mobilenetv2) |
 | mobilenetv3 | 224x224 | - | 69.4% | 66.3% | 0.51 | 1960+ | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5/samples/vision/mobilenetv3) |

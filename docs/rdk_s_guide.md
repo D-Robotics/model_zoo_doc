@@ -3,7 +3,7 @@ sidebar_position: 4
 sidebar_products: "RDK S100, RDK S600"
 ---
 
-# 4.1.4 RDK S Model Zoo 使用说明
+# 4.1.4 使用说明
 
 ## 分支与系统要求
 
@@ -237,6 +237,7 @@ bash run.sh
 | 类别 | 模型 | Sample 目录 | 支持平台 |
 | :--- | :--- | :--- | :--- |
 | 语音识别 | ASR（Wav2Vec2） | `samples/speech/asr` | S100 / S600 |
+| 语音识别 | Paraformer（中文 ASR，WAV 输入，三段 INT16 HBM） | `samples/speech/paraformer` | S100 |
 | 关键词检测 | KWS（MDTC） | `samples/speech/kws` | S100 |
 
 ### 具身智能 / 机器人策略（VLA）
