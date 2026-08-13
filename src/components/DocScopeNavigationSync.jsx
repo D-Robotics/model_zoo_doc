@@ -25,7 +25,13 @@ export default function DocScopeNavigationSync() {
       if (!rawHref || rawHref.startsWith('#') || rawHref.startsWith('mailto:') || rawHref.startsWith('tel:')) {
         return;
       }
-      const nextHref = appendDocScopeToHref(rawHref, version, product, origin);
+      const nextHref = appendDocScopeToHref(
+        rawHref,
+        version,
+        product,
+        origin,
+        siteConfig?.baseUrl,
+      );
       if (nextHref && nextHref !== rawHref) {
         anchor.setAttribute('href', nextHref);
       }

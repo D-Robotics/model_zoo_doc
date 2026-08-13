@@ -4,6 +4,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
 } from 'react';
 import { useHistory, useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
@@ -175,6 +176,8 @@ export function DocScopeFilterProvider({ children }) {
   const hasBuildScope = Boolean(
     buildScope?.enabled && buildScope?.product && buildScope?.version,
   );
+  /** 首页仅在用户手动切换产品/版本后才写入 ?v=&p= */
+  const introScopeExplicitRef = useRef(false);
 
   const { version, product: productFromUrl } = useMemo(() => {
     if (hasBuildScope) {
@@ -209,23 +212,21 @@ export function DocScopeFilterProvider({ children }) {
     }
 
     if (isModelZooIntroPath(location.pathname, baseUrl)) {
-      const params = new URLSearchParams(
-        location.search?.startsWith('?') ? location.search.slice(1) : location.search || '',
-      );
-      const hasScopeParams = params.has('v') || params.has('p');
-      if (hasScopeParams) {
-        params.delete('v');
-        params.delete('p');
-        const nextSearch = params.toString() ? `?${params.toString()}` : '';
+      if (
+        introScopeExplicitRef.current &&
+        !docScopeSearchMatches(location.search, version, product)
+      ) {
         history.replace({
           pathname: location.pathname,
-          search: nextSearch,
+          search: mergeDocScopeSearch(location.search, version, product),
           hash: location.hash,
           state: location.state,
         });
       }
       return;
     }
+
+    introScopeExplicitRef.current = false;
 
     const nextSearch = mergeDocScopeSearch(location.search, version, product);
 
@@ -261,6 +262,7 @@ export function DocScopeFilterProvider({ children }) {
       if (hasBuildScope) {
         return;
       }
+      introScopeExplicitRef.current = true;
       const newV = normalizeVersionFromQuery(v, locale);
       const list =
         VERSION_PRODUCT_MATRIX[newV] || VERSION_PRODUCT_MATRIX[def.version];
@@ -278,6 +280,7 @@ export function DocScopeFilterProvider({ children }) {
       if (hasBuildScope) {
         return;
       }
+      introScopeExplicitRef.current = true;
       const canonical = resolveCanonicalProductKeyForMatrix(p);
       if (!canonical) {
         return;

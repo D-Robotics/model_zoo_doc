@@ -1,7 +1,13 @@
-.generatedIndexPage {
+@media (width >= 997px) {
+  .generatedIndexPage {
+    max-width: 75% !important;
+  }
 }
 
+/* Match .markdown h1 used by regular doc pages */
 .title {
+  --ifm-h1-font-size: 3rem;
+  margin-bottom: calc(1.25 * var(--ifm-leading));
 }
 
 .list {
