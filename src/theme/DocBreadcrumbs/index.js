@@ -89,6 +89,34 @@ function resolveLabelFromMap(labelMap, href, fallbackPathname) {
   return null;
 }
 
+function matchesCurrentPath(permalink, current, currentTail) {
+  if (!permalink) return false;
+  const normalized = normalizePath(permalink);
+  const tail = normalizePathTail(permalink);
+  return (
+    normalized === current ||
+    normalized === currentTail ||
+    tail === current ||
+    tail === currentTail
+  );
+}
+
+function findBreadcrumbPath(items, current, currentTail, trail = []) {
+  if (!Array.isArray(items)) return null;
+  for (const item of items) {
+    const permalink = item?.href || item?.permalink || null;
+    const nextTrail = [...trail, item];
+    if (matchesCurrentPath(permalink, current, currentTail)) {
+      return nextTrail;
+    }
+    if (item?.type === 'category' && Array.isArray(item.items)) {
+      const found = findBreadcrumbPath(item.items, current, currentTail, nextTrail);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
 function BreadcrumbsItemLink({children, href, isLast}) {
   const className = 'breadcrumbs__link';
   if (isLast) {
@@ -130,13 +158,34 @@ export default function DocBreadcrumbs() {
   }, [processedSidebarItems]);
 
   const scopedBreadcrumbs = useMemo(() => {
+    const current = normalizePath(pathname);
+    const currentTail = normalizePathTail(pathname);
+    const fromProcessed = findBreadcrumbPath(
+      processedSidebarItems,
+      current,
+      currentTail,
+    );
+    if (fromProcessed && fromProcessed.length > 0) {
+      return fromProcessed;
+    }
     if (!breadcrumbs) return null;
-    return breadcrumbs.map((item, idx) => {
-      const isLast = idx === breadcrumbs.length - 1;
-      const mapped = resolveLabelFromMap(labelMap, item?.href, isLast ? pathname : null);
-      return mapped ? {...item, label: mapped} : item;
-    });
-  }, [breadcrumbs, labelMap, pathname]);
+    return breadcrumbs
+      .map((item, idx) => {
+        const isLast = idx === breadcrumbs.length - 1;
+        const mapped = resolveLabelFromMap(
+          labelMap,
+          item?.href,
+          isLast ? pathname : null,
+        );
+        return mapped ? {...item, label: mapped} : item;
+      })
+      .filter((item, idx, list) => {
+        const isLast = idx === list.length - 1;
+        if (isLast) return true;
+        const href = item?.href || item?.permalink;
+        return Boolean(resolveLabelFromMap(labelMap, href, null));
+      });
+  }, [breadcrumbs, labelMap, pathname, processedSidebarItems]);
 
   if (!scopedBreadcrumbs) {
     return null;
