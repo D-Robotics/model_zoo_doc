@@ -89,9 +89,9 @@ sample_name/
 
 ## Inference Interface
 
-The `rdk_x5` branch Python samples uniformly use the `hbm_runtime` inference interface. For the complete interface reference, see [RDK X5 hbm_runtime Python API Documentation](../../03_Basic_Application/06_multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/pydev_hbdnn_demo.md).
+The `rdk_x5` branch Python samples uniformly use the `hbm_runtime` inference interface. For the complete interface reference, see [RDK X5 hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_x_doc/en/Basic_Application/multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/ai-python-api?v=3.5.0&p=RDK+X5).
 
-C++ inference interface documentation: **`hb_dnn` C/C++ Inference Interface Documentation** 👉 [Runtime Development Docs](https://developer.d-robotics.cc/api/v1/fileData/x5_doc-v126cn/runtime/source/runtime_dev.html)
+C++ inference interface documentation: **`hb_dnn` C/C++ Inference Interface Documentation** 👉 [Runtime Development Docs](https://developer.d-robotics.cc/oe_x5_doc/cn/oe_mapper/source/runtime.html)
 
 ### hbm_runtime Basic Call Flow
 
