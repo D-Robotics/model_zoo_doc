@@ -18,6 +18,8 @@ const copyrightYearLabel =
     : `${COPYRIGHT_START_YEAR}`;
 
 
+const localePrefix = process.env.DOCUSAURUS_CURRENT_LOCALE === "en" ? "/en" : "";
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Model Zoo DOC",
@@ -52,7 +54,7 @@ const config = {
       src: "/model_zoo_doc/js/dify-config.js",
     },
     {
-      src: "/model_zoo_doc/js/umami-events.js",
+      src: `/model_zoo_doc${localePrefix}/js/umami-events.js`,
       async: true,
     },
     {
