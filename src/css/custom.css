@@ -1068,6 +1068,47 @@ body.plugin-id-os-rdk-s600        .navbar-version-dropdown--os-rdk-s600 {
   display: none !important;
 }
 
+/*
+ * DocScope 外包一层 .doc-scope，会打断 Infima 的 .markdown > h* 直系子选择器，
+ * 导致标题字号/间距回退到基础 h*。这里对齐 Infima 的 markdown 标题样式。
+ */
+.markdown .doc-scope > h2 {
+  --ifm-h2-font-size: 2rem;
+  margin-bottom: calc(
+    var(--ifm-heading-vertical-rhythm-bottom) * var(--ifm-leading)
+  );
+  margin-top: calc(var(--ifm-h2-vertical-rhythm-top) * var(--ifm-leading));
+}
+
+.markdown .doc-scope > h3 {
+  --ifm-h3-font-size: 1.5rem;
+  margin-bottom: calc(
+    var(--ifm-heading-vertical-rhythm-bottom) * var(--ifm-leading)
+  );
+  margin-top: calc(var(--ifm-h3-vertical-rhythm-top) * var(--ifm-leading));
+}
+
+.markdown .doc-scope > h4,
+.markdown .doc-scope > h5,
+.markdown .doc-scope > h6 {
+  margin-bottom: calc(
+    var(--ifm-heading-vertical-rhythm-bottom) * var(--ifm-leading)
+  );
+  margin-top: calc(
+    var(--ifm-heading-vertical-rhythm-top) * var(--ifm-leading)
+  );
+}
+
+@media (max-width: 576px) {
+  .markdown .doc-scope > h2 {
+    --ifm-h2-font-size: 1.5rem;
+  }
+
+  .markdown .doc-scope > h3 {
+    --ifm-h3-font-size: 1.25rem;
+  }
+}
+
 /* 搜索关键词高亮样式 */
 mark.search-highlight {
   background-color: #fff3a3;
