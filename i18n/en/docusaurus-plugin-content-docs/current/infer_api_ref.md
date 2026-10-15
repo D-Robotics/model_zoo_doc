@@ -10,14 +10,14 @@ import DocScope from '@site/src/components/DocScope';
 
 ## Overview
 
-Model Zoo Python inference interfaces are selected by hardware platform and branch:
+Model Zoo Python inference interfaces are selected by hardware platform:
 
-| Platform | Branch | Inference Interface | Interface Source |
+| Platform | Code Location | Inference Interface | Interface Source |
 | :--- | :--- | :--- | :--- |
-| RDK X5 | `rdk_x5` | `hbm_runtime` | Board-builtin |
-| RDK X5 (legacy) | `rdk_x5_legacy` | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | Manual install / Board-builtin |
-| RDK X3 | `rdk_x3` | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | Manual install / Board-builtin |
-| RDK S Series | `rdk_s` | `hbm_runtime` | Board-builtin |
+| RDK X5 | `main` branch `samples/` tree, target `x5` | `hbm_runtime` | Board-builtin |
+| RDK X5 (legacy demos) | `rdk_x5_legacy` branch | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | Manual install / Board-builtin |
+| RDK X3 | `rdk_x3` branch | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | Manual install / Board-builtin |
+| RDK S Series | `main` branch `samples/` tree, target `s100` / `s100p` / `s600` | `hbm_runtime` | Board-builtin |
 
 ## hbm_runtime Interface
 
@@ -64,11 +64,11 @@ result = outputs[model_name][output_names[0]]
 
 #### Detailed API Documentation
 
-👉 [RDK X5 hbm_runtime Python API Documentation](../../03_Basic_Application/06_multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/pydev_hbdnn_demo.md)
+👉 [RDK X5 hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_x_doc/en/Basic_Application/multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/ai-python-api?v=3.5.0&p=RDK+X5)
 
 </DocScope>
 
-<DocScope versions=">=4.0.5" products="RDK S100/S600">
+<DocScope versions=">=4.0.5" products="RDK-S100,RDK-S600">
 ### RDK S Series Call Flow
 
 #### Load Model
@@ -106,7 +106,7 @@ result = outputs[model_name][output_names[0]]
 
 #### Detailed API Documentation
 
-👉 [RDK S hbm_runtime Python API Documentation](/rdk_s/Algorithm_Application/python-api)
+👉 [RDK S hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_s_doc/Algorithm_Application/python-api)
 
 </DocScope>
 
@@ -198,7 +198,7 @@ The target directory README and source entry point define the model path, input 
 
 | Platform | Recommended Interface | Usage Notes |
 | :--- | :--- | :--- |
-| RDK X5, RDK OS >= 3.5.0 | `hbm_runtime` | `rdk_x5` branch, follow sample README |
+| RDK X5, RDK OS >= 3.5.0 | `hbm_runtime` | `main` branch `samples/` tree, target `x5`, follow sample README |
 | RDK X5 (legacy demos) | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | `rdk_x5_legacy` branch, follow target directory README |
 | RDK X3 | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | `rdk_x3` branch, follow target directory README |
-| RDK S Series | `hbm_runtime` | `rdk_s` branch, follow sample README |
+| RDK S Series, RDK OS >= 4.0.5 | `hbm_runtime` | `main` branch `samples/` tree, target `s100` / `s100p` / `s600`, follow sample README |

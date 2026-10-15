@@ -5,74 +5,66 @@ sidebar_products: "RDK-X5"
 
 # 4.1.3 使用说明
 
-## 分支与系统要求
+## 获取代码与系统要求
 
-RDK X5 使用 `rdk_x5` 分支作为主交付分支。推荐系统版本 RDK OS >= 3.5.0。该分支的 Python sample 统一使用 `hbm_runtime` 推理接口。
+RDK X5 使用 `main` 分支统一的 `samples/` 目录。推荐系统版本 RDK OS >= 3.5.0。Python sample 统一使用 `hbm_runtime` 推理接口，并通过 `--target x5` 或 `--platform x5` 选择板卡目标。
 
 ```bash
 git clone https://github.com/D-Robotics/rdk_model_zoo.git
 cd rdk_model_zoo
-git checkout rdk_x5
 ```
 
 :::tip
 
-`rdk_x5` 分支是 RDK X5 的主交付分支，推荐优先使用。原 `main` 分支已变更为 `rdk_x5_legacy`，仅用于历史 demo 归档。
+`main` 是默认分支，克隆后无需切换分支。X5、S100、S100P、S600 共用同一套 `samples/` 目录，目标板卡由命令行参数选择。
 
 :::
 
 ## 仓库目录结构
 
-`rdk_x5` 分支采用规范化目录结构，按领域和模型组织：
+`main` 分支按领域和模型组织 `samples/` 目录：
 
 ```bash
 rdk_model_zoo/
 |-- samples/
-|   `-- vision/
-|       |-- clip/                 # 图文多模态匹配
-|       |-- convnext/             # 图像分类
-|       |-- edgenext/             # 图像分类
-|       |-- efficient_sam/        # 提示词分割
-|       |-- efficientformer/      # 图像分类
-|       |-- efficientformerv2/    # 图像分类
-|       |-- efficientnet/         # 图像分类
-|       |-- efficientvit/         # 图像分类
-|       |-- fasternet/            # 图像分类
-|       |-- fastvit/              # 图像分类
-|       |-- fcos/                 # 目标检测
-|       |-- googlenet/            # 图像分类
-|       |-- hgnetv2/              # 图像分类
-|       |-- lprnet/               # 车牌识别
-|       |-- mobile_sam/           # 提示词分割
-|       |-- mobilenetv1/          # 图像分类
-|       |-- mobilenetv2/          # 图像分类
-|       |-- mobilenetv3/          # 图像分类
-|       |-- mobilenetv4/          # 图像分类
-|       |-- mobileone/            # 图像分类
-|       |-- modnet/               # 图像抠图
-|       |-- pp_liteseg/           # 语义分割
-|       |-- paddleocr/            # OCR 文字检测与识别
-|       |-- repghost/             # 图像分类
-|       |-- repvgg/               # 图像分类
-|       |-- repvit/               # 图像分类
-|       |-- resnet/               # 图像分类
-|       |-- resnext/              # 图像分类
-|       |-- yolo26_depth/         # 单目深度估计
-|       |-- ultralytics_yolo/     # 检测、分割、姿态、分类
-|       |-- ultralytics_yolo26/   # 检测、分割、姿态、OBB、分类
-|       |-- vargconvnet/          # 图像分类
-|       |-- yoloe/                # 实例分割
-|       |-- yolov5/               # 目标检测
-|       `-- yoloworld/            # 开放词表目标检测
-|-- docs/                         # 项目规范与参考文档
-|-- datasets/                     # 数据集与下载脚本
-|-- tros/                         # TROS 集成指南与示例
-`-- utils/                        # 公共 Python / C++ 工具
+|   |-- vision/                    # 视觉模型示例
+|   |   |-- 3dresnet/              # 视频动作分类
+|   |   |-- bytetrack/             # 多目标跟踪
+|   |   |-- clip/                  # 图文多模态匹配
+|   |   |-- convnext/              # 图像分类
+|   |   |-- depth_anything_v2/     # 单目深度估计
+|   |   |-- fasterrcnn/            # 目标检测 / 行人跟踪
+|   |   |-- fcos/                  # 目标检测
+|   |   |-- googlenet/             # 图像分类
+|   |   |-- hobot_mot/             # 多目标跟踪（CPU IOU 2.0）
+|   |   |-- lprnet/                # 车牌识别
+|   |   |-- mobilenetv1/           # 图像分类
+|   |   |-- mobilenetv2/           # 图像分类
+|   |   |-- mobilenetv3/           # 图像分类
+|   |   |-- mobilenetv4/           # 图像分类
+|   |   |-- mobileone/             # 图像分类
+|   |   |-- modnet/                # 图像抠图
+|   |   |-- paddle_ocr/            # OCR 文字检测与识别
+|   |   |-- pp_liteseg/            # 语义分割
+|   |   |-- resnet/                # 图像分类
+|   |   |-- unet/                  # 语义分割
+|   |   |-- ultralytics_yolo/      # 检测、分割、姿态、分类、OBB（YOLOv5u~YOLO26）
+|   |   |-- yolo26_depth/          # 单目深度估计
+|   |   |-- yoloe/                 # 实例分割（prompt-free）
+|   |   |-- yolov5/                # 目标检测
+|   |   `-- yoloworld/             # 开放词表目标检测
+|   |-- speech/                    # 语音模型示例
+|   |-- llm/                       # 端侧文本生成（原生 C++）
+|   |-- robotics/                  # 机器人策略
+|   `-- vla/                       # 具身智能 / 机器人策略（ACT / Pi0）
+|-- datasets/                      # 数据集与下载脚本
+|-- docs/                          # 项目规范、平台清单与参考文档
+`-- utils/                         # 公共 Python / C++ 工具
 ```
 
 ## 单个 Sample 结构
 
-每个 RDK X5 sample 包含以下标准化目录：
+典型 sample 目录结构（以 `samples/vision/resnet` 为例）：
 
 ```bash
 sample_name/
@@ -80,16 +72,21 @@ sample_name/
 |-- README_cn.md           # 中文说明文档
 |-- conversion/            # ONNX → HBM/BIN 转换配置
 |-- evaluator/             # 精度与性能评测
-|-- model/                 # 预编译 .bin 模型 + 下载脚本
+|-- model/                 # 模型下载脚本与清单
 |-- runtime/
-|   |-- python/            # Python 推理（main.py, <model>.py, run.sh）
+|   |-- python/            # Python 推理（main.py, cli.py, <task>.py, run.sh）
 |   `-- cpp/               # C++ 推理（src/main.cc, CMakeLists.txt, run.sh）
+|-- tests/                 # 自动化测试
 `-- test_data/             # 测试图片与推理结果
 ```
 
+Python runtime 采用 `main.py + cli.py` 布局：`main.py` 是精简入口（解析参数、构建模型、调用 `predict`），`cli.py` 负责参数声明、模型清单解析与结果展示，各任务模块（如 `detect.py`、`classify.py`）实现完整的预处理、推理和后处理流程。
+
+并非所有 sample 都同时提供 Python 和 C++ runtime：LLM sample 仅提供原生 C++ runtime，VLA sample（ACT / Pi0）以固定 commit 的 Git 子模块形式提供，目录结构与上述典型布局略有差异，以各 sample README 为准。
+
 ## 推理接口
 
-`rdk_x5` 分支的 Python sample 统一使用 `hbm_runtime` 推理接口。完整接口参考 [RDK X5 hbm_runtime Python API 文档](https://developer.d-robotics.cc/rdk_x_doc/Basic_Application/multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/ai-python-api?v=3.5.0&p=RDK+X5)。
+RDK X5 的 Python sample 统一使用 `hbm_runtime` 推理接口。完整接口参考 [RDK X5 hbm_runtime Python API 文档](https://developer.d-robotics.cc/rdk_x_doc/Basic_Application/multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/ai-python-api?v=3.5.0&p=RDK+X5)。
 
 C++ 推理接口文档：**`hb_dnn` C/C++ 推理接口文档** 👉 [Runtime 开发文档](https://developer.d-robotics.cc/oe_x5_doc/cn/oe_mapper/source/runtime.html)
 
@@ -126,7 +123,7 @@ model.set_scheduling_params(
 
 #### 准备输入
 
-RDK X5 视觉 sample 常见输入为 packed NV12 格式。wrapper 的 `pre_process()` 会完成 resize、BGR 转 NV12、数据打包等步骤：
+RDK X5 视觉 sample 常见输入为 packed NV12 格式。模型类的 `preprocess()` 会完成 resize、BGR 转 NV12、数据打包等步骤：
 
 ```python
 inputs = {
@@ -146,61 +143,81 @@ output_tensor = raw_outputs[output_names[0]]
 
 ### Model Zoo wrapper 流程
 
-RDK X5 sample 封装为 `Config + Model + predict()` 模式：
+Sample 中的模型类按 `preprocess → infer → postprocess` 组织，并由 `predict()` 串联。以 ResNet 分类 sample（`samples/vision/resnet/runtime/python/classify.py`）为例：
 
 ```python
-config = YOLOv5Config(
-    model_path="../../model/yolov5n_tag_v7.0_detect_640x640_bayese_nv12.bin",
-    classes_num=80,
-    score_thres=0.25,
-    nms_thres=0.45,
+model = ResNetClassifier(
+    model_path,                # 编译后的模型文件路径
+    target="x5",               # 板卡目标：x5 / s100 / s100p / s600
+    input_size=(224, 224),
+    class_count=1000,
+    top_k=5,
+    labels=labels,             # 类别名表
 )
 
-model = YOLOv5Detect(config)
 model.set_scheduling_params(priority=0, bpu_cores=[0])
-results = model.predict(image)
+result = model.predict("test_img.jpg")
 ```
 
-wrapper 内部按以下顺序执行：
+`predict()` 内部按以下顺序执行：
 
-1. `pre_process()`：生成模型输入
-2. `forward()`：调用 `hbm_runtime.run()`
-3. `post_process()`：解析检测框、分类结果、分割 mask 或姿态点
-4. `predict()`：串联完整流程
+1. `preprocess()`：生成模型输入
+2. `infer()`：调用 `hbm_runtime` 执行推理
+3. `postprocess()`：解析检测框、分类结果、分割 mask 或姿态点
 
 ## 快速上手
 
 ### 运行 Ultralytics YOLO11x 检测 sample
 
-```bash
-# 下载模型
-cd samples/vision/ultralytics_yolo/model
-wget -nc https://archive.d-robotics.cc/downloads/rdk_model_zoo/rdk_x5/ultralytics_YOLO/yolo11x_detect_bayese_640x640_nv12.bin
+在仓库根目录执行：
 
-# 运行推理
-cd ../runtime/python
-python3 main.py \
+```bash
+# 1. 下载模型（按平台、模型族、任务和规模选择）
+bash samples/vision/ultralytics_yolo/model/download_model.sh \
+  --platform x5 --family yolo11 --task detect --model-size x
+
+# 2. 运行推理
+python3 samples/vision/ultralytics_yolo/runtime/python/main.py \
+  --platform x5 \
+  --family yolo11 \
   --task detect \
-  --model-path ../../model/yolo11x_detect_bayese_640x640_nv12.bin \
-  --test-img ../../../../../datasets/coco/assets/bus.jpg \
-  --img-save-path ../../test_data/inference_yolo11x.jpg
+  --model-size x \
+  --test-img samples/vision/ultralytics_yolo/test_data/bus.jpg \
+  --img-save-path samples/vision/ultralytics_yolo/test_data/inference_yolo11x.jpg
 ```
+
+说明：
+
+- `--target` 与 `--platform` 等价；推理入口会校验板卡与目标一致，未知目标会直接报错
+- 不指定 `--model-path` 时，入口在板端自动下载缺失的默认模型；显式指定 `--model-path` 时不会触发下载
+- 无板卡时可在主机上用 `--list-models` 查看模型清单、用 `--dry-run` 预演解析结果
 
 ### 使用 run.sh 一键运行
 
-每个 sample 的 `runtime/python/` 和 `runtime/cpp/` 目录下均提供 `run.sh` 脚本，可一键完成环境设置、模型下载和推理：
+多数 sample 在 `runtime/python/` 目录、部分 sample 在 `runtime/cpp/` 目录提供 `run.sh` 脚本，转发参数到对应入口。以下子 shell 示例均在仓库根目录独立执行，互不影响当前目录：
 
 ```bash
-# Python 推理
-cd samples/vision/yolov5/runtime/python
-bash run.sh
+# Python 推理（首个参数为任务；platform 缺省时自动检测板卡）
+(cd samples/vision/ultralytics_yolo/runtime/python && \
+  bash run.sh detect --platform x5 --family yolo11 --model-size x)
 
-# C++ 推理
-cd samples/vision/yolov5/runtime/cpp
-bash run.sh
+# C++ 推理（在目标板上构建并运行，需板端 DNN SDK；
+# 需从 sample 根目录运行以解析默认 test_data 资产，按位置传入模型、图片和结果路径）
+(cd samples/vision/ultralytics_yolo && \
+  bash runtime/cpp/run.sh --task detect \
+  model/yolo26n_detect_bayese_640x640_nv12.bin \
+  test_data/bus.jpg /tmp/cpp-result.jpg)
 ```
 
+说明：
+
+- Python `run.sh` 的首个参数为任务（`detect` / `seg` / `pose` / `cls` / `obb`），其余参数转发给 `main.py`
+- C++ `run.sh` 先用 CMake 完成 out-of-tree 构建，再运行可执行文件；构建目标默认自动探测板端 SDK，也可用 `YOLO_TARGET=x5|s100|s100p|s600` 显式指定
+- C++ 各任务的参数与默认模型路径见 `runtime/cpp/README.md`；上例模型需提前准备（`bash samples/vision/ultralytics_yolo/model/download_model.sh --platform x5 --family yolo26 --task detect --model-size n`）
+
 ## 模型支持范围
+
+RDK X5 相关 sample 如下（各 sample README 提供完整的变体与支持矩阵）：
 
 ### 图像分类
 
@@ -233,15 +250,22 @@ bash run.sh
 | 模型 | Sample 目录 |
 | :--- | :--- |
 | FCOS | `samples/vision/fcos` |
+| Faster R-CNN（行人检测与跟踪） | `samples/vision/fasterrcnn` |
 | YOLOv5 | `samples/vision/yolov5` |
-| Ultralytics YOLO（YOLOv5u / YOLOv8 / YOLOv9 / YOLOv10 / YOLO11 / YOLO12 / YOLO13） | `samples/vision/ultralytics_yolo` |
-| Ultralytics YOLO26 | `samples/vision/ultralytics_yolo26` |
+| Ultralytics YOLO（YOLOv5u / YOLOv8 / YOLOv9 / YOLOv10 / YOLO11 / YOLO12 / YOLO13 / YOLO26） | `samples/vision/ultralytics_yolo` |
+
+### 多目标跟踪
+
+| 模型 | Sample 目录 |
+| :--- | :--- |
+| ByteTrack | `samples/vision/bytetrack` |
+| HobotMot（CPU IOU 2.0） | `samples/vision/hobot_mot` |
 
 ### 实例分割 / 抠图
 
 | 模型 | Sample 目录 |
 | :--- | :--- |
-| YOLOE | `samples/vision/yoloe` |
+| YOLOE（prompt-free） | `samples/vision/yoloe` |
 | MODNet | `samples/vision/modnet` |
 
 ### 提示词分割
@@ -255,7 +279,8 @@ bash run.sh
 
 | 模型 | Sample 目录 |
 | :--- | :--- |
-| PP-LiteSeg-STDC1 | `samples/vision/pp_liteseg` |
+| PP-LiteSeg | `samples/vision/pp_liteseg` |
+| UNet（ResNet 系列） | `samples/vision/unet` |
 
 ### 单目深度估计
 
@@ -267,7 +292,7 @@ bash run.sh
 
 | 模型 | Sample 目录 |
 | :--- | :--- |
-| PaddleOCR | `samples/vision/paddleocr` |
+| PaddleOCR | `samples/vision/paddle_ocr` |
 | LPRNet | `samples/vision/lprnet` |
 
 ### 多模态
@@ -277,9 +302,15 @@ bash run.sh
 | CLIP | `samples/vision/clip` |
 | YOLOWorld | `samples/vision/yoloworld` |
 
+### 机器人
+
+| 模型 | Sample 目录 |
+| :--- | :--- |
+| HIMLoco（Unitree Go2 运动策略） | `samples/robotics/himloco` |
+
 ## rdk_x5_legacy 分支
 
-RDK X5 使用 `rdk_x5_legacy` 分支时：
+查询 RDK X5 历史 demo 时使用 `rdk_x5_legacy` 分支：
 
 ```bash
 git clone https://github.com/D-Robotics/rdk_model_zoo.git
@@ -300,15 +331,15 @@ pip install bpu_infer_lib_x5-1.0.3-py3-none-any.whl
 
 :::caution
 
-`rdk_x5_legacy` 为历史归档分支，不再主动维护。新项目请使用 `rdk_x5` 分支。
+`rdk_x5_legacy` 为历史归档分支，不再主动维护。新项目请使用 `main` 分支 `samples/` 目录下的对应 sample。
 
-`bpu_infer_lib_x5` 和 `hobot_dnn.pyeasy_dnn` **对 featuremap 输入模型支持不佳**。如需使用 featuremap 输入模型，请使用 `rdk_x5` 分支的 `hbm_runtime` 推理接口。
+`bpu_infer_lib_x5` 和 `hobot_dnn.pyeasy_dnn` **对 featuremap 输入模型支持不佳**。如需使用 featuremap 输入模型，请使用 `main` 分支的 `hbm_runtime` 推理接口。
 
 :::
 
 ## 共享工具（utils/）
 
-`rdk_x5` 分支提供以下共享 Python 工具（`utils/py_utils/`）：
+`main` 分支提供以下共享 Python 工具（`utils/py_utils/`）：
 
 | 工具模块 | 功能 |
 | :--- | :--- |

@@ -24,46 +24,41 @@ RDK Model Zoo 是一个社区开源共建项目。我们非常欢迎开发者贡
 
 ## 分支与硬件平台对应关系
 
-Model Zoo 按硬件平台提供对应分支，不同分支的目录结构、推理接口和系统要求有所不同：
+RDK X5 和 RDK S 系列（S100 / S100P / S600）共用 `main` 分支统一的 `samples/` 目录：在目标板卡上拉取 `main` 分支后，按每个 sample README 的说明用 `--target` / `--platform` 参数选择板卡目标（`x5` / `s100` / `s100p` / `s600`），不同目标对应的模型格式、下载地址和输入协议由 sample 内的平台清单决定。
 
-| 目标硬件 | 对应分支 | Python 推理接口 | 使用入口 |
+| 目标硬件 | 代码位置 | Python 推理接口 | 使用入口 |
 | :--- | :--- | :--- | :--- |
-| RDK X5 | [`rdk_x5`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5) | `hbm_runtime` | `samples/vision/<sample>/README.md` |
-| RDK X5（历史 demo） | [`rdk_x5_legacy`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5_legacy) | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | 目标 demo 目录 README |
-| RDK X3 | [`rdk_x3`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x3) | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | `demos/<task>/<demo>/README.md` |
-| RDK S 系列 | [`rdk_s`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s) | `hbm_runtime` | `samples/<domain>/<sample>/README.md` |
+| RDK X5 | [`main`](https://github.com/D-Robotics/rdk_model_zoo/tree/main) 分支 `samples/` 目录，target `x5` | `hbm_runtime` | `samples/vision/<sample>/README.md` |
+| RDK S100 | [`main`](https://github.com/D-Robotics/rdk_model_zoo/tree/main) 分支 `samples/` 目录，target `s100` | `hbm_runtime` | `samples/<domain>/<sample>/README.md` |
+| RDK S100P | [`main`](https://github.com/D-Robotics/rdk_model_zoo/tree/main) 分支 `samples/` 目录，target `s100p` | `hbm_runtime` | `samples/<domain>/<sample>/README.md` |
+| RDK S600 | [`main`](https://github.com/D-Robotics/rdk_model_zoo/tree/main) 分支 `samples/` 目录，target `s600` | `hbm_runtime` | `samples/<domain>/<sample>/README.md` |
+| RDK X3 | [`rdk_x3`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x3) 分支 | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | `demos/<task>/<demo>/README.md` |
 
 ## 分支说明
 
+`main` 是交付分支（默认分支），`develop` 是统一开发分支；`rdk_x5`、`rdk_s` 为保留的历史板卡交付分支，`rdk_x3` 仅作历史归档。
+
 <DocScope versions=">=3.5.0" products="RDK X5">
 
-### rdk_x5
+### main（RDK X5）
 
-RDK X5 的主交付分支，需系统版本 RDK OS >= 3.5.0。
+RDK X5 从 `main` 分支的统一 `samples/` 目录获取示例，需系统版本 RDK OS >= 3.5.0。
 
-- Python sample 统一使用 `hbm_runtime` 接口，C++ sample 使用 `hb_dnn` 接口
-- 目录按 `samples/vision/<model>` 规范化组织
-- 包含模型下载、转换配置、Python/C++ runtime、评测工具和测试数据
+- Python sample 使用 `hbm_runtime` 接口，并以 `--target x5` / `--platform x5` 选择板卡目标；C++ sample 使用 `hb_dnn` 接口
+- 目录按 `samples/<domain>/<sample>` 规范化组织
+- 每个 sample 包含模型下载、转换配置、Python/C++ runtime、评测工具和测试数据
 
-### rdk_x5_legacy
+### 历史分支与归档
 
-原 RDK X5 历史 demo 归档分支，仅用于历史兼容和旧 demo 查询。
-
-- 目录按 `demos/<task>/<demo>` 组织
-- 不同 demo 使用不同的推理接口（`bpu_infer_lib_x5` 或板端自带的 `hobot_dnn.pyeasy_dnn`），以目标目录 README 为准
-
-:::caution
-
-`bpu_infer_lib_x5` 和 `hobot_dnn.pyeasy_dnn` 对 featuremap 输入模型支持不佳。如需使用 featuremap 输入模型，请使用 `rdk_x5` 分支的 `hbm_runtime`。
-
-:::
+- [`rdk_x5`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5)：RDK X5 历史交付分支，仅用于查询历史版本
+- [`rdk_x5_legacy`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5_legacy)：RDK X5 历史 demo 归档（`demos/<task>/<demo>`；旧接口对 featuremap 输入模型支持不佳，新项目请使用 `main` 分支）
 
 </DocScope>
 
 <DocScope versions=">=3.0.0" products="RDK X3">
 ### rdk_x3
 
-RDK X3 设备专用分支。
+RDK X3 设备专用归档分支。
 
 - 目录按 `demos/<task>/<demo>` 组织
 - 包含图像分类、目标检测、实例分割等示例
@@ -80,12 +75,13 @@ RDK X3 设备专用分支。
 </DocScope>
 
 <DocScope versions=">=4.0.5" products="RDK-S100,RDK-S600">
-### rdk_s
+### main（RDK S 系列）
 
-RDK S100 / S600 系列板卡专用分支，需系统版本 RDK OS >= 4.0.5。
+RDK S100 / S100P / S600 与 RDK X5 共用 `main` 分支的统一 `samples/` 目录，需系统版本 RDK OS >= 4.0.5。
 
-- 按领域组织 sample，包含视觉和语音示例
-- 推理接口为 `hbm_runtime`（与 RDK X5 同名，底层依赖不同：S 系列基于 `libhbucp`，X5 基于 `libdnn`）
+- Python sample 使用 `hbm_runtime` 接口，并以 `--target s100` / `--target s100p` / `--target s600` 选择板卡目标
+- 按领域组织 sample，包含视觉、语音和机器人示例
+- `hbm_runtime` 与 RDK X5 同名，底层依赖不同：S 系列基于 `libhbucp`，X5 基于 `libdnn`
 - RDK S 系列的历史 demo 保留在 [RDK Model Zoo S](https://github.com/d-Robotics/rdk_model_zoo_s) 仓库
 
 </DocScope>

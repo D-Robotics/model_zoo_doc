@@ -28,47 +28,41 @@ RDK Model Zoo is a community-driven open-source project. We highly welcome devel
 
 ## Branch and Hardware Platform Mapping
 
-Model Zoo provides corresponding branches by hardware platform. Directory structure, inference interfaces, and system requirements differ across branches:
+RDK X5 and the RDK S series (S100 / S100P / S600) share the unified `samples/` directory on the `main` branch: after pulling `main` on the target board, select the board target with the `--target` / `--platform` arguments (`x5` / `s100` / `s100p` / `s600`) as described in each sample's README. The model format, download URLs and input protocol for each target are determined by the platform manifests inside each sample.
 
-| Target Hardware | Branch | Python Inference Interface | Entry Point |
+| Target Hardware | Code Location | Python Inference Interface | Entry Point |
 | :--- | :--- | :--- | :--- |
-| RDK X5 | [`rdk_x5`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5) | `hbm_runtime` | `samples/vision/<sample>/README.md` |
-| RDK X5 (legacy demos) | [`rdk_x5_legacy`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5_legacy) | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | Target demo directory README |
-| RDK X3 | [`rdk_x3`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x3) | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | `demos/<task>/<demo>/README.md` |
-| RDK S Series | [`rdk_s`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s) | `hbm_runtime` | `samples/<domain>/<sample>/README.md` |
+| RDK X5 | [`main`](https://github.com/D-Robotics/rdk_model_zoo/tree/main) branch `samples/` tree, target `x5` | `hbm_runtime` | `samples/vision/<sample>/README.md` |
+| RDK S100 | [`main`](https://github.com/D-Robotics/rdk_model_zoo/tree/main) branch `samples/` tree, target `s100` | `hbm_runtime` | `samples/<domain>/<sample>/README.md` |
+| RDK S100P | [`main`](https://github.com/D-Robotics/rdk_model_zoo/tree/main) branch `samples/` tree, target `s100p` | `hbm_runtime` | `samples/<domain>/<sample>/README.md` |
+| RDK S600 | [`main`](https://github.com/D-Robotics/rdk_model_zoo/tree/main) branch `samples/` tree, target `s600` | `hbm_runtime` | `samples/<domain>/<sample>/README.md` |
+| RDK X3 | [`rdk_x3`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x3) branch | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | `demos/<task>/<demo>/README.md` |
 
 ## Branch Descriptions
 
-<DocScope products="RDK-X5">
+`main` is the delivery branch (default), `develop` is the unified development branch; `rdk_x5` and `rdk_s` are preserved historical per-board delivery branches, and `rdk_x3` is archived for history only.
 
-### rdk_x5
+<DocScope versions=">=3.5.0" products="RDK X5">
 
-The main delivery branch for RDK X5, requiring system version RDK OS >= 3.5.0.
+### main (RDK X5)
 
-- Python samples uniformly use the `hbm_runtime` interface, C++ samples use the `hb_dnn` interface
-- Organized by `samples/vision/<model>` in a standardized structure
-- Includes model download, conversion configs, Python/C++ runtime, evaluation tools, and test data
+RDK X5 samples come from the unified `samples/` directory on the `main` branch, requiring system version RDK OS >= 3.5.0.
 
-### rdk_x5_legacy
+- Python samples use the `hbm_runtime` interface and select the board target with `--target x5` / `--platform x5`; C++ samples use the `hb_dnn` interface
+- Directories are organized in the normalized `samples/<domain>/<sample>` layout
+- Each sample includes model download, conversion configs, Python/C++ runtime, evaluation tools, and test data
 
-The legacy RDK X5 demo archive branch, used only for historical compatibility and old demo lookup.
+### Historical Branches and Archives
 
-- Organized by `demos/<task>/<demo>`
-- Different demos use different inference interfaces (`bpu_infer_lib_x5` or the board-builtin `hobot_dnn.pyeasy_dnn`), as specified in each target directory's README
-
-:::caution
-
-`bpu_infer_lib_x5` and `hobot_dnn.pyeasy_dnn` have poor support for featuremap input models. If you need to use featuremap input models, please use `hbm_runtime` from the `rdk_x5` branch.
-
-:::
+- [`rdk_x5`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5): historical RDK X5 delivery branch, kept for querying historical versions only
+- [`rdk_x5_legacy`](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_x5_legacy): RDK X5 legacy demo archive (`demos/<task>/<demo>`; the legacy interfaces have poor support for featuremap input models — use the `main` branch for new projects)
 
 </DocScope>
 
-<DocScope products="RDK-X3">
-
+<DocScope versions=">=3.0.0" products="RDK X3">
 ### rdk_x3
 
-Dedicated branch for RDK X3 devices.
+Dedicated archive branch for RDK X3 devices.
 
 - Organized by `demos/<task>/<demo>`
 - Includes image classification, object detection, and instance segmentation examples
@@ -84,14 +78,14 @@ Some demos support Jupyter Notebook interactive experience.
 
 </DocScope>
 
-<DocScope products="RDK-S100,RDK-S600">
+<DocScope versions=">=4.0.5" products="RDK-S100,RDK-S600">
+### main (RDK S Series)
 
-### rdk_s
+RDK S100 / S100P / S600 share the unified `samples/` directory on the `main` branch with RDK X5, requiring system version RDK OS >= 4.0.5.
 
-Dedicated branch for RDK S100 / S600 series boards, requiring system version RDK OS >= 4.0.5.
-
-- Organized by domain, including vision and speech examples
-- The inference interface is `hbm_runtime` (same name as RDK X5, different underlying dependency: S series is based on `libhbucp`, X5 is based on `libdnn`)
+- Python samples use the `hbm_runtime` interface and select the board target with `--target s100` / `--target s100p` / `--target s600`
+- Samples are organized by domain, including vision, speech, and robotics examples
+- `hbm_runtime` shares its name with RDK X5 but relies on a different underlying library: the S series is based on `libhbucp`, X5 is based on `libdnn`
 - Legacy demos for the RDK S series are retained in the [RDK Model Zoo S](https://github.com/d-Robotics/rdk_model_zoo_s) repository
 
 </DocScope>
@@ -117,4 +111,3 @@ Dedicated branch for RDK S100 / S600 series boards, requiring system version RDK
 </DocScope>
 
 - Inference interface reference: [3 Inference Interface Reference](./infer_api_ref.md)
-
