@@ -5,74 +5,66 @@ sidebar_products: "RDK-X5"
 
 # 4.1.3 Usage Guide
 
-## Branch and System Requirements
+## Getting the Code and System Requirements
 
-RDK X5 uses the `rdk_x5` branch as the main delivery branch. Recommended system version: RDK OS >= 3.5.0. Python samples in this branch uniformly use the `hbm_runtime` inference interface.
+RDK X5 uses the unified `samples/` directory on the `main` branch. Recommended system version: RDK OS >= 3.5.0. Python samples uniformly use the `hbm_runtime` inference interface, and select the board target with `--target x5` or `--platform x5`.
 
 ```bash
 git clone https://github.com/D-Robotics/rdk_model_zoo.git
 cd rdk_model_zoo
-git checkout rdk_x5
 ```
 
 :::tip
 
-The `rdk_x5` branch is the main delivery branch for RDK X5 and is recommended for priority use. The original `main` branch has been renamed to `rdk_x5_legacy` and is used only for historical demo archiving.
+`main` is the default branch — no branch switch is needed after cloning. RDK X5, S100, S100P and S600 share the same `samples/` directory; the board target is selected with command-line arguments.
 
 :::
 
 ## Repository Directory Structure
 
-The `rdk_x5` branch uses a standardized directory structure, organized by domain and model:
+On the `main` branch, the `samples/` directory is organized by domain and model:
 
 ```bash
 rdk_model_zoo/
 |-- samples/
-|   `-- vision/
-|       |-- clip/                 # Image-text multimodal matching
-|       |-- convnext/             # Image classification
-|       |-- edgenext/             # Image classification
-|       |-- efficient_sam/        # Promptable segmentation
-|       |-- efficientformer/      # Image classification
-|       |-- efficientformerv2/    # Image classification
-|       |-- efficientnet/         # Image classification
-|       |-- efficientvit/         # Image classification
-|       |-- fasternet/            # Image classification
-|       |-- fastvit/              # Image classification
-|       |-- fcos/                 # Object detection
-|       |-- googlenet/            # Image classification
-|       |-- hgnetv2/              # Image classification
-|       |-- lprnet/               # License plate recognition
-|       |-- mobile_sam/           # Promptable segmentation
-|       |-- mobilenetv1/          # Image classification
-|       |-- mobilenetv2/          # Image classification
-|       |-- mobilenetv3/          # Image classification
-|       |-- mobilenetv4/          # Image classification
-|       |-- mobileone/            # Image classification
-|       |-- modnet/               # Image matting
-|       |-- pp_liteseg/           # Semantic segmentation
-|       |-- paddleocr/            # OCR text detection and recognition
-|       |-- repghost/             # Image classification
-|       |-- repvgg/               # Image classification
-|       |-- repvit/               # Image classification
-|       |-- resnet/               # Image classification
-|       |-- resnext/              # Image classification
-|       |-- yolo26_depth/         # Monocular depth estimation
-|       |-- ultralytics_yolo/     # Detection, segmentation, pose, classification
-|       |-- ultralytics_yolo26/   # Detection, segmentation, pose, OBB, classification
-|       |-- vargconvnet/          # Image classification
-|       |-- yoloe/                # Instance segmentation
-|       |-- yolov5/               # Object detection
-|       `-- yoloworld/            # Open-vocabulary object detection
-|-- docs/                         # Project specs and reference documentation
-|-- datasets/                     # Datasets and download scripts
-|-- tros/                         # TROS integration guides and examples
-`-- utils/                        # Shared Python / C++ utilities
+|   |-- vision/                    # Vision model samples
+|   |   |-- 3dresnet/              # Video action classification
+|   |   |-- bytetrack/             # Multi-object tracking
+|   |   |-- clip/                  # Image-text multimodal matching
+|   |   |-- convnext/              # Image classification
+|   |   |-- depth_anything_v2/     # Monocular depth estimation
+|   |   |-- fasterrcnn/            # Object detection / pedestrian tracking
+|   |   |-- fcos/                  # Object detection
+|   |   |-- googlenet/             # Image classification
+|   |   |-- hobot_mot/             # Multi-object tracking (CPU IOU 2.0)
+|   |   |-- lprnet/                # License plate recognition
+|   |   |-- mobilenetv1/           # Image classification
+|   |   |-- mobilenetv2/           # Image classification
+|   |   |-- mobilenetv3/           # Image classification
+|   |   |-- mobilenetv4/           # Image classification
+|   |   |-- mobileone/             # Image classification
+|   |   |-- modnet/                # Image matting
+|   |   |-- paddle_ocr/            # OCR text detection and recognition
+|   |   |-- pp_liteseg/            # Semantic segmentation
+|   |   |-- resnet/                # Image classification
+|   |   |-- unet/                  # Semantic segmentation
+|   |   |-- ultralytics_yolo/      # Detection, segmentation, pose, classification, OBB (YOLOv5u~YOLO26)
+|   |   |-- yolo26_depth/          # Monocular depth estimation
+|   |   |-- yoloe/                 # Instance segmentation (prompt-free)
+|   |   |-- yolov5/                # Object detection
+|   |   `-- yoloworld/             # Open-vocabulary object detection
+|   |-- speech/                    # Speech model samples
+|   |-- llm/                       # On-device text generation (native C++)
+|   |-- robotics/                  # Robot policies
+|   `-- vla/                       # Embodied AI / robot policies (ACT / Pi0)
+|-- datasets/                      # Datasets and download scripts
+|-- docs/                          # Project specs, platform manifests and reference docs
+`-- utils/                         # Shared Python / C++ utilities
 ```
 
 ## Individual Sample Structure
 
-Each RDK X5 sample contains the following standardized directories:
+Typical sample directory layout (using `samples/vision/resnet` as an example):
 
 ```bash
 sample_name/
@@ -80,16 +72,21 @@ sample_name/
 |-- README_cn.md           # Chinese documentation
 |-- conversion/            # ONNX → HBM/BIN conversion configs
 |-- evaluator/             # Accuracy and performance evaluation
-|-- model/                 # Pre-compiled .bin models + download scripts
+|-- model/                 # Model download scripts and manifests
 |-- runtime/
-|   |-- python/            # Python inference (main.py, <model>.py, run.sh)
+|   |-- python/            # Python inference (main.py, cli.py, <task>.py, run.sh)
 |   `-- cpp/               # C++ inference (src/main.cc, CMakeLists.txt, run.sh)
+|-- tests/                 # Automated tests
 `-- test_data/             # Test images and inference results
 ```
 
+The Python runtime follows a `main.py + cli.py` layout: `main.py` is the thin entry point (parses arguments, builds the model, calls `predict`), `cli.py` handles argument declaration, model manifest resolution and result display, and the task modules (e.g. `detect.py`, `classify.py`) implement the full preprocess, inference and postprocess chain.
+
+Not every sample provides both a Python and a C++ runtime: LLM samples ship a native C++ runtime only, and VLA samples (ACT / Pi0) are pinned Git submodules, so their layout differs slightly from the typical structure above — each sample's README is authoritative.
+
 ## Inference Interface
 
-The `rdk_x5` branch Python samples uniformly use the `hbm_runtime` inference interface. For the complete interface reference, see [RDK X5 hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_x_doc/en/Basic_Application/multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/ai-python-api?v=3.5.0&p=RDK+X5).
+Python samples for RDK X5 uniformly use the `hbm_runtime` inference interface. For the complete interface reference, see [RDK X5 hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_x_doc/en/Basic_Application/multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/ai-python-api?v=3.5.0&p=RDK+X5).
 
 C++ inference interface documentation: **`hb_dnn` C/C++ Inference Interface Documentation** 👉 [Runtime Development Docs](https://developer.d-robotics.cc/oe_x5_doc/cn/oe_mapper/source/runtime.html)
 
@@ -126,7 +123,7 @@ Command-line parameter equivalents:
 
 #### Prepare Inputs
 
-RDK X5 vision samples commonly use packed NV12 format input. The wrapper's `pre_process()` handles resize, BGR-to-NV12 conversion, data packing, etc.:
+RDK X5 vision samples commonly use packed NV12 format input. The model class's `preprocess()` handles resize, BGR-to-NV12 conversion, data packing, etc.:
 
 ```python
 inputs = {
@@ -146,61 +143,82 @@ output_tensor = raw_outputs[output_names[0]]
 
 ### Model Zoo Wrapper Flow
 
-RDK X5 samples follow the `Config + Model + predict()` pattern:
+The model classes in each sample are organized around `preprocess → infer → postprocess`, chained by `predict()`. Taking the ResNet classification sample (`samples/vision/resnet/runtime/python/classify.py`) as an example:
 
 ```python
-config = YOLOv5Config(
-    model_path="../../model/yolov5n_tag_v7.0_detect_640x640_bayese_nv12.bin",
-    classes_num=80,
-    score_thres=0.25,
-    nms_thres=0.45,
+model = ResNetClassifier(
+    model_path,                # Path to the compiled model file
+    target="x5",               # Board target: x5 / s100 / s100p / s600
+    input_size=(224, 224),
+    class_count=1000,
+    top_k=5,
+    labels=labels,             # Class name list
 )
 
-model = YOLOv5Detect(config)
 model.set_scheduling_params(priority=0, bpu_cores=[0])
-results = model.predict(image)
+result = model.predict("test_img.jpg")
 ```
 
-The wrapper executes in the following order:
+`predict()` executes the following stages in order:
 
-1. `pre_process()`: Generate model inputs
-2. `forward()`: Call `hbm_runtime.run()`
-3. `post_process()`: Parse detection boxes, classification results, segmentation masks, or pose keypoints
-4. `predict()`: Chain the complete flow
+1. `preprocess()`: Generate model inputs
+2. `infer()`: Call `hbm_runtime` to run inference
+3. `postprocess()`: Parse detection boxes, classification results, segmentation masks, or pose keypoints
 
 ## Quick Start
 
 ### Run the Ultralytics YOLO11x Detection Sample
 
-```bash
-# Download model
-cd samples/vision/ultralytics_yolo/model
-wget -nc https://archive.d-robotics.cc/downloads/rdk_model_zoo/rdk_x5/ultralytics_YOLO/yolo11x_detect_bayese_640x640_nv12.bin
+Run from the repository root:
 
-# Run inference
-cd ../runtime/python
-python3 main.py \
+```bash
+# 1. Download the model (select by platform, model family, task and size)
+bash samples/vision/ultralytics_yolo/model/download_model.sh \
+  --platform x5 --family yolo11 --task detect --model-size x
+
+# 2. Run inference
+python3 samples/vision/ultralytics_yolo/runtime/python/main.py \
+  --platform x5 \
+  --family yolo11 \
   --task detect \
-  --model-path ../../model/yolo11x_detect_bayese_640x640_nv12.bin \
-  --test-img ../../../../../datasets/coco/assets/bus.jpg \
-  --img-save-path ../../test_data/inference_yolo11x.jpg
+  --model-size x \
+  --test-img samples/vision/ultralytics_yolo/test_data/bus.jpg \
+  --img-save-path samples/vision/ultralytics_yolo/test_data/inference_yolo11x.jpg
 ```
+
+Notes:
+
+- `--target` is an alias of `--platform`; the inference entry validates that the board matches the target and raises an error for unknown targets
+- When `--model-path` is not specified, the entry downloads the missing default model on the board; explicitly specifying `--model-path` skips the download
+- Without a board, you can run `--list-models` on the host to inspect the model manifest and `--dry-run` to preview argument resolution
 
 ### Using run.sh for One-Click Execution
 
-Each sample provides a `run.sh` script in its `runtime/python/` and `runtime/cpp/` directories for one-click environment setup, model download, and inference:
+Most samples provide a `run.sh` script under `runtime/python/`, and some under `runtime/cpp/`, forwarding arguments to the corresponding entry point. The following subshell examples run independently from the repository root and do not affect each other's working directory:
 
 ```bash
-# Python inference
-cd samples/vision/yolov5/runtime/python
-bash run.sh
+# Python inference (first argument is the task; the platform is auto-detected when omitted)
+(cd samples/vision/ultralytics_yolo/runtime/python && \
+  bash run.sh detect --platform x5 --family yolo11 --model-size x)
 
-# C++ inference
-cd samples/vision/yolov5/runtime/cpp
-bash run.sh
+# C++ inference (builds and runs on the target board, requires the board DNN SDK;
+# run from the sample root so the default test_data assets resolve; positional
+# arguments are model, image and result path)
+(cd samples/vision/ultralytics_yolo && \
+  bash runtime/cpp/run.sh --task detect \
+  model/yolo26n_detect_bayese_640x640_nv12.bin \
+  test_data/bus.jpg /tmp/cpp-result.jpg)
 ```
 
+Notes:
+
+- The first Python `run.sh` argument is the task (`detect` / `seg` / `pose` / `cls` / `obb`); the remaining arguments are forwarded to `main.py`
+- The C++ `run.sh` performs an out-of-tree CMake build first, then executes the binary; the build target is auto-discovered from the board SDK, or pinned with `YOLO_TARGET=x5|s100|s100p|s600`
+- C++ task arguments and per-task default model paths are documented in `runtime/cpp/README.md`; the model in the example above must be prepared first (`bash samples/vision/ultralytics_yolo/model/download_model.sh --platform x5 --family yolo26 --task detect --model-size n`)
+
 ## Model Coverage
+
+The samples available for RDK X5 are listed below (each sample's README provides the full variant and support matrix):
 
 ### Image Classification
 
@@ -233,15 +251,22 @@ bash run.sh
 | Model | Sample Directory |
 | :--- | :--- |
 | FCOS | `samples/vision/fcos` |
+| Faster R-CNN (pedestrian detection and tracking) | `samples/vision/fasterrcnn` |
 | YOLOv5 | `samples/vision/yolov5` |
-| Ultralytics YOLO (YOLOv5u / YOLOv8 / YOLOv9 / YOLOv10 / YOLO11 / YOLO12 / YOLO13) | `samples/vision/ultralytics_yolo` |
-| Ultralytics YOLO26 | `samples/vision/ultralytics_yolo26` |
+| Ultralytics YOLO (YOLOv5u / YOLOv8 / YOLOv9 / YOLOv10 / YOLO11 / YOLO12 / YOLO13 / YOLO26) | `samples/vision/ultralytics_yolo` |
+
+### Multi-Object Tracking
+
+| Model | Sample Directory |
+| :--- | :--- |
+| ByteTrack | `samples/vision/bytetrack` |
+| HobotMot (CPU IOU 2.0) | `samples/vision/hobot_mot` |
 
 ### Instance Segmentation / Matting
 
 | Model | Sample Directory |
 | :--- | :--- |
-| YOLOE | `samples/vision/yoloe` |
+| YOLOE (prompt-free) | `samples/vision/yoloe` |
 | MODNet | `samples/vision/modnet` |
 
 ### Promptable Segmentation
@@ -255,7 +280,8 @@ bash run.sh
 
 | Model | Sample Directory |
 | :--- | :--- |
-| PP-LiteSeg-STDC1 | `samples/vision/pp_liteseg` |
+| PP-LiteSeg | `samples/vision/pp_liteseg` |
+| UNet (ResNet family) | `samples/vision/unet` |
 
 ### Monocular Depth Estimation
 
@@ -267,7 +293,7 @@ bash run.sh
 
 | Model | Sample Directory |
 | :--- | :--- |
-| PaddleOCR | `samples/vision/paddleocr` |
+| PaddleOCR | `samples/vision/paddle_ocr` |
 | LPRNet | `samples/vision/lprnet` |
 
 ### Multimodal
@@ -277,9 +303,15 @@ bash run.sh
 | CLIP | `samples/vision/clip` |
 | YOLOWorld | `samples/vision/yoloworld` |
 
+### Robotics
+
+| Model | Sample Directory |
+| :--- | :--- |
+| HIMLoco (Unitree Go2 locomotion policy) | `samples/robotics/himloco` |
+
 ## rdk_x5_legacy Branch
 
-When using RDK X5 with the `rdk_x5_legacy` branch:
+To consult historical RDK X5 demos, use the `rdk_x5_legacy` branch:
 
 ```bash
 git clone https://github.com/D-Robotics/rdk_model_zoo.git
@@ -300,15 +332,15 @@ Demos that use `hobot_dnn.pyeasy_dnn` use the board-builtin interface directly.
 
 :::caution
 
-`rdk_x5_legacy` is a legacy archive branch and is no longer actively maintained. New projects should use the `rdk_x5` branch.
+`rdk_x5_legacy` is a legacy archive branch and is no longer actively maintained. New projects should use the corresponding sample in the `samples/` directory on the `main` branch.
 
-`bpu_infer_lib_x5` and `hobot_dnn.pyeasy_dnn` **have poor support for featuremap input models**. If you need to use featuremap input models, please use the `hbm_runtime` inference interface from the `rdk_x5` branch.
+`bpu_infer_lib_x5` and `hobot_dnn.pyeasy_dnn` **have poor support for featuremap input models**. If you need to use featuremap input models, please use the `hbm_runtime` inference interface on the `main` branch.
 
 :::
 
 ## Shared Utilities (utils/)
 
-The `rdk_x5` branch provides the following shared Python utilities (`utils/py_utils/`):
+The `main` branch provides the following shared Python utilities (`utils/py_utils/`):
 
 | Utility Module | Function |
 | :--- | :--- |

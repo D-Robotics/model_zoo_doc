@@ -10,14 +10,14 @@ import DocScope from '@site/src/components/DocScope';
 
 ## 概述
 
-Model Zoo 的 Python 推理接口按硬件平台和分支选择：
+Model Zoo 的 Python 推理接口按硬件平台选择：
 
-| 平台 | 分支 | 推理接口 | 接口来源 |
+| 平台 | 代码位置 | 推理接口 | 接口来源 |
 | :--- | :--- | :--- | :--- |
-| RDK X5 | `rdk_x5` | `hbm_runtime` | 板端系统自带 |
-| RDK X5（历史） | `rdk_x5_legacy` | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | 手动安装 / 板端自带 |
-| RDK X3 | `rdk_x3` | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | 手动安装 / 板端自带 |
-| RDK S 系列 | `rdk_s` | `hbm_runtime` | 板端系统自带 |
+| RDK X5 | `main` 分支 `samples/` 目录，target `x5` | `hbm_runtime` | 板端系统自带 |
+| RDK X5（历史 demo） | `rdk_x5_legacy` 分支 | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | 手动安装 / 板端自带 |
+| RDK X3 | `rdk_x3` 分支 | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | 手动安装 / 板端自带 |
+| RDK S 系列 | `main` 分支 `samples/` 目录，target `s100` / `s100p` / `s600` | `hbm_runtime` | 板端系统自带 |
 
 ## hbm_runtime 接口
 
@@ -68,7 +68,7 @@ result = outputs[model_name][output_names[0]]
 
 </DocScope>
 
-<DocScope versions=">=4.0.5" products="RDK S100/S600">
+<DocScope versions=">=4.0.5" products="RDK-S100,RDK-S600">
 
 ### RDK S 系列调用流程
 
@@ -107,7 +107,7 @@ result = outputs[model_name][output_names[0]]
 
 #### 详细 API 文档
 
-👉 [RDK S hbm_runtime Python API 文档](https://developer.d-robotics.cc/rdk_s_doc/Basic_Application/multi_media_sp_dev_api/RDK_s100/pydev_multimedia_api_/ai-python-api)
+👉 [RDK S hbm_runtime Python API 文档](https://developer.d-robotics.cc/rdk_s_doc/Algorithm_Application/python-api)
 
 </DocScope>
 
@@ -195,7 +195,7 @@ outputs = model.forward(input_tensor)
 
 | 平台 | 推荐接口 | 使用说明 |
 | :--- | :--- | :--- |
-| RDK X5，RDK OS >= 3.5.0 | `hbm_runtime` | `rdk_x5` 分支，按 sample README 使用 |
+| RDK X5，RDK OS >= 3.5.0 | `hbm_runtime` | `main` 分支 `samples/` 目录，target `x5`，按 sample README 使用 |
 | RDK X5（历史 demo） | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | `rdk_x5_legacy` 分支，按目标目录 README 使用 |
 | RDK X3 | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | `rdk_x3` 分支，按目标目录 README 使用 |
-| RDK S 系列 | `hbm_runtime` | `rdk_s` 分支，按 sample README 使用 |
+| RDK S 系列，RDK OS >= 4.0.5 | `hbm_runtime` | `main` 分支 `samples/` 目录，target `s100` / `s100p` / `s600`，按 sample README 使用 |

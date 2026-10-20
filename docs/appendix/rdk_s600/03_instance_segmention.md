@@ -8,21 +8,21 @@ sidebar_position: 3
 
 | Device | Model | 输入尺寸 | 类别数 | 单线程延迟(ms) | 单线程FPS | 12线程延迟(ms) | 12线程FPS | CPU延迟(ms) | 参数量(M) | FLOPs(B) | GitHub仓库 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| S600 | YOLO11l Seg | 640×640 | 80 | 4.268 | 233.082 | 12.015 | 967.109 | 5.0 | 27.6 M | 142.2 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo) |
-| S600 | YOLO11m Seg | 640×640 | 80 | 3.624 | 274.240 | 9.977 | 1161.123 | 5.0 | 22.4 M | 123.3 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo) |
-| S600 | YOLO11n Seg | 640×640 | 80 | 0.959 | 1024.863 | 2.379 | 4586.104 | 5.0 | 2.9 M | 10.4 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo) |
-| S600 | YOLO11s Seg | 640×640 | 80 | 1.513 | 651.042 | 3.845 | 2908.329 | 5.0 | 10.1 M | 35.5 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo) |
-| S600 | YOLO11x Seg | 640×640 | 80 | 8.831 | 112.923 | 25.480 | 459.263 | 5.0 | 62.1 M | 319.0 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo) |
-| S600 | YOLOv8l Seg | 640×640 | 80 | 5.585 | 178.335 | 15.661 | 743.323 | 5.0 | 46.0 M | 220.5 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo) |
-| S600 | YOLOv8m Seg | 640×640 | 80 | 3.298 | 301.000 | 8.931 | 1296.706 | 5.0 | 27.3 M | 100.2 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo) |
-| S600 | YOLOv8n Seg | 640×640 | 80 | 0.940 | 1038.438 | 2.236 | 4790.304 | 5.0 | 3.4 M | 12.6 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo) |
-| S600 | YOLOv8s Seg | 640×640 | 80 | 1.540 | 642.329 | 3.883 | 2873.027 | 5.0 | 11.8 M | 42.6 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo) |
-| S600 | YOLOv8x Seg | 640×640 | 80 | 8.884 | 112.265 | 25.517 | 458.336 | 5.0 | 71.8 M | 344.1 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo) |
-| S600 | YOLO26n Seg | 640x640 | 80 | 1.02 | 966.75 | 2.54 | 4353.03 | - | 3.13 | 10.5 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo26) |
-| S600 | YOLO26s Seg | 640x640 | 80 | 1.70 | 579.68 | 4.38 | 2585.38 | - | 11.51 | 37.4 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo26) |
-| S600 | YOLO26m Seg | 640x640 | 80 | 3.91 | 254.03 | 10.87 | 1069.46 | - | 27.11 | 132.5 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo26) |
-| S600 | YOLO26l Seg | 640x640 | 80 | 4.58 | 217.11 | 13.00 | 895.80 | - | 31.52 | 150.9 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo26) |
-| S600 | YOLO26x Seg | 640x640 | 80 | 9.32 | 107.13 | 26.92 | 434.77 | - | 70.69 | 337.7 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/rdk_s/samples/vision/ultralytics_yolo26) |
+| S600 | YOLO11l Seg | 640×640 | 80 | 4.268 | 233.082 | 12.015 | 967.109 | 5.0 | 27.6 M | 142.2 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLO11m Seg | 640×640 | 80 | 3.624 | 274.240 | 9.977 | 1161.123 | 5.0 | 22.4 M | 123.3 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLO11n Seg | 640×640 | 80 | 0.959 | 1024.863 | 2.379 | 4586.104 | 5.0 | 2.9 M | 10.4 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLO11s Seg | 640×640 | 80 | 1.513 | 651.042 | 3.845 | 2908.329 | 5.0 | 10.1 M | 35.5 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLO11x Seg | 640×640 | 80 | 8.831 | 112.923 | 25.480 | 459.263 | 5.0 | 62.1 M | 319.0 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLOv8l Seg | 640×640 | 80 | 5.585 | 178.335 | 15.661 | 743.323 | 5.0 | 46.0 M | 220.5 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLOv8m Seg | 640×640 | 80 | 3.298 | 301.000 | 8.931 | 1296.706 | 5.0 | 27.3 M | 100.2 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLOv8n Seg | 640×640 | 80 | 0.940 | 1038.438 | 2.236 | 4790.304 | 5.0 | 3.4 M | 12.6 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLOv8s Seg | 640×640 | 80 | 1.540 | 642.329 | 3.883 | 2873.027 | 5.0 | 11.8 M | 42.6 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLOv8x Seg | 640×640 | 80 | 8.884 | 112.265 | 25.517 | 458.336 | 5.0 | 71.8 M | 344.1 M | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLO26n Seg | 640x640 | 80 | 1.02 | 966.75 | 2.54 | 4353.03 | - | 3.13 | 10.5 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLO26s Seg | 640x640 | 80 | 1.70 | 579.68 | 4.38 | 2585.38 | - | 11.51 | 37.4 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLO26m Seg | 640x640 | 80 | 3.91 | 254.03 | 10.87 | 1069.46 | - | 27.11 | 132.5 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLO26l Seg | 640x640 | 80 | 4.58 | 217.11 | 13.00 | 895.80 | - | 31.52 | 150.9 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
+| S600 | YOLO26x Seg | 640x640 | 80 | 9.32 | 107.13 | 26.92 | 434.77 | - | 70.69 | 337.7 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/vision/ultralytics_yolo) |
 
 
 
