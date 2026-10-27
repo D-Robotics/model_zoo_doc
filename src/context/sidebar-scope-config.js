@@ -1,14 +1,12 @@
-import { scopeProductsMatchCurrent } from './doc-scope-product-utils.js';
-import {
-  lookupDocScopeConfig,
-  normalizeDocIdFromPath,
-} from './doc-scope-id-utils.js';
-import { matchVersion } from './doc-scope-version-utils.js';
+import { shouldShowDoc as shouldShowDocByConfig } from './doc-scope-filter-core.mjs';
 
 /**
  * 侧边栏显示范围配置
  * 由 sidebar-scope-config-plugin 在 build/start 时生成至 .docusaurus/generated-sidebar-config.json
  * （不进 git；开发时 watch-sidebar-config 也会更新同一文件）
+ *
+ * 匹配逻辑（文档级优先、目录级取最深祖先、exclude 优先）统一在
+ * doc-scope-filter-core.mjs 中实现，与 Algolia 索引器保持一致。
  */
 
 let generatedFrontmatterConfig = {};
@@ -27,30 +25,7 @@ try {
  * @returns {boolean} 是否显示
  */
 export function shouldShowDoc(docId, version, product) {
-  const normalizedId = normalizeDocIdFromPath(docId);
-
-  // 1. 文档级匹配：支持文件路径 key 与 front matter id 两种写法
-  const docScope = lookupDocScopeConfig(docId, generatedFrontmatterConfig);
-  if (docScope) {
-    const vMatch = matchVersion(version, docScope.versions);
-    const pMatch = scopeProductsMatchCurrent(docScope.products, product);
-    return vMatch && pMatch;
-  }
-
-  // 2. 检查文件夹级别的匹配（文档路径是否属于某个配置的文件夹）
-  for (const [configPath, scope] of Object.entries(generatedFrontmatterConfig)) {
-    if (!scope.isCategory) continue;
-    
-    const normalizedConfigPath = normalizeDocIdFromPath(configPath);
-    
-    if (normalizedId.startsWith(normalizedConfigPath + '/') || normalizedId === normalizedConfigPath) {
-      const vMatch = matchVersion(version, scope.versions);
-      const pMatch = scopeProductsMatchCurrent(scope.products, product);
-      return vMatch && pMatch;
-    }
-  }
-
-  return true;
+  return shouldShowDocByConfig(docId, version, product, generatedFrontmatterConfig);
 }
 
 /**

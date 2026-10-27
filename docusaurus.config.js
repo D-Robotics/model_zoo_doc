@@ -182,6 +182,18 @@ const config = {
     ({
       // Replace with your project's social card
       image: "img/docusaurus-social-card.jpg",
+      // Algolia DocSearch. Search-Only API Key 可以公开；Admin/Write Key 只放 CI Secret。
+      // 索引由 scripts/algolia-index.mjs 在全量重建时写入（不使用 Algolia Crawler）。
+      algolia: {
+        appId: process.env.ALGOLIA_APP_ID || "1VU781LYTV",
+        apiKey:
+          process.env.ALGOLIA_SEARCH_KEY ||
+          "fb65c6e54a52ce6fba0645bd2630e79b",
+        indexName: process.env.ALGOLIA_INDEX_NAME || "model_zoo_doc",
+        // 必须：Docusaurus 会注入 language / docusaurus_tag 上下文过滤
+        contextualSearch: true,
+        searchPagePath: "search",
+      },
       // ✅ 新增：支持 h2 ~ h5 add by xgs for table of contents
     tableOfContents: {
       minHeadingLevel: 2,
@@ -302,25 +314,9 @@ const config = {
     }),
   themes: [
     "@docusaurus/theme-mermaid",
-    [
-      require.resolve("@easyops-cn/docusaurus-search-local"),
-      {
-        // 性能优化
-        hashed: true, // 启用长期缓存
-        language: ["en", "zh"], // 中英文支持
-        highlightSearchTermsOnTargetPage: true,
-        explicitSearchResultPath: true,
-        docsRouteBasePath: ["/", "rdk_s"], // 支持多个文档路径
-        
-        // 优化索引大小和加载速度
-        indexDocs: true,
-        indexBlog: false, // 禁用博客索引
-        indexPages: false, // 禁用页面索引
-        
-        // 搜索行为优化
-        searchResultContextMaxLength: 50, // 减少上下文长度
-      },
-    ],
+    // 搜索已切换为 Algolia（见 themeConfig.algolia）。
+    // 旧的本地搜索 @easyops-cn/docusaurus-search-local 已移除，
+    // Pagefind 全页实现保留在 src/legacy/search-page-pagefind.jsx 备查。
   ],
 };
 

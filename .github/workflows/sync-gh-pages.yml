@@ -39,3 +39,10 @@ jobs:
           --region cn-beijing \
           --update \
           --retry-times=3
+
+  # The live site is served from OSS, so the index must be rebuilt after this
+  # sync (not right after the gh-pages deploy).
+  algolia-index:
+    needs: sync-gh-pages
+    uses: ./.github/workflows/algolia-index.yml
+    secrets: inherit
