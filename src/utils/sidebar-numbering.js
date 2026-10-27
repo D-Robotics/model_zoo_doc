@@ -69,6 +69,9 @@ export function findDocDisplayNumber(items, targetDocId) {
 function shouldFlattenParentWithSingleChild(parent, child) {
   if (!parent || !child) return false;
   if (parent.type !== 'category') return false;
+  // 分类自己有页面（生成索引或文档链接）时必须留在侧栏里，
+  // 否则标题、面包屑和翻页都对不上当前页。
+  if (parent.href || parent.permalink) return false;
 
   const p = parseNumberedLabel(parent.label);
   const c = parseNumberedLabel(child.label);
@@ -79,8 +82,9 @@ function shouldFlattenParentWithSingleChild(parent, child) {
 }
 
 /**
- * 扁平化“只剩一个可见子项”的中间目录：
+ * 扁平化“只剩一个可见子项、且自己没有独立页面”的中间目录：
  * 例如过滤后 1.2 下只剩 1.2.1，则侧栏不展示 1.2，直接展示该子项。
+ * 带生成索引或文档链接的分类会保留，避免当前页从目录、标题、面包屑和翻页里消失。
  */
 export function flattenSingleChildCategories(items) {
   if (!Array.isArray(items)) return items;

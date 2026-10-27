@@ -89,7 +89,7 @@ RDK S 系列的 Python sample 统一使用 `hbm_runtime` 推理接口，与 RDK 
 
 完整接口参考 👉 [RDK S hbm_runtime Python API 文档](./02_Python_API.md)
 
-C/C++ 推理接口文档：**UCP（`hb_ucp`）接口文档** 👉 [UCP Overview](https://toolchain.d-robotics.cc/guide/ucp/ucp_overview.html)
+C/C++ 推理接口文档：**UCP（`hb_ucp`）接口文档** 👉 [总览](https://developer.d-robotics.cc/oe_s_doc/guide/ucp/ucp_overview)
 
 ### hbm_runtime 基础调用流程
 

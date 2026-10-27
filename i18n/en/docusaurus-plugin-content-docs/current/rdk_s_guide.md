@@ -89,7 +89,7 @@ The RDK S series Python samples uniformly use the `hbm_runtime` inference interf
 
 For the complete interface reference 👉 [RDK S hbm_runtime Python API Documentation](./02_Python_API.md)
 
-C/C++ inference interface documentation: **UCP (`hb_ucp`) Interface Documentation** 👉 [UCP Overview](https://toolchain.d-robotics.cc/guide/ucp/ucp_overview.html)
+C/C++ inference interface documentation: **UCP (`hb_ucp`) Interface Documentation** 👉 [Overview](https://developer.d-robotics.cc/oe_s_doc/en/guide/ucp/ucp_overview)
 
 ### hbm_runtime Basic Call Flow
 
