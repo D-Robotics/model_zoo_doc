@@ -104,6 +104,7 @@ const config = {
     },
     {
       tagName: "script",
+      attributes: {},
       innerHTML: locale404RedirectScript,
     },
   ],
