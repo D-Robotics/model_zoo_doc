@@ -23,8 +23,24 @@ function importDocSearchModalIfNeeded() {
   });
 }
 
-function normalizeFilters(filters) {
-  return (filters || []).flatMap((filter) => (Array.isArray(filter) ? filter : [filter]));
+// Algolia treats a nested array as OR and sibling entries as AND.
+// Docusaurus passes docusaurus_tag values as one OR group; flattening it
+// requires every tag at once and the query matches nothing.
+function concatFacetFilters(...groups) {
+  const filters = [];
+  for (const group of groups) {
+    if (!group) continue;
+    const list = Array.isArray(group) ? group : [group];
+    for (const filter of list) {
+      if (Array.isArray(filter)) {
+        if (filter.length === 1) filters.push(filter[0]);
+        else if (filter.length > 1) filters.push(filter);
+      } else if (filter) {
+        filters.push(filter);
+      }
+    }
+  }
+  return filters;
 }
 
 function Hit({ hit, children }) {
@@ -53,13 +69,9 @@ function useSearchParameters(props) {
   return useMemo(
     () => ({
       ...props.searchParameters,
-      // All groups are AND-ed by Algolia. language / docusaurus_tag come from
-      // contextualSearch, product / rdk_version from the DocScope context.
-      facetFilters: [
-        ...normalizeFilters(contextualFilters),
-        ...normalizeFilters(configFilters),
-        ...scopeFilters,
-      ],
+      // language is AND. docusaurus_tag stays an OR group. product / rdk_version
+      // from the DocScope context are AND.
+      facetFilters: concatFacetFilters(contextualFilters, configFilters, scopeFilters),
     }),
     [props.searchParameters, contextualFilters, configFilters, scopeFilters],
   );
