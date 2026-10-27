@@ -92,7 +92,7 @@ Dedicated branch for RDK S100 / S600 series boards, requiring system version RDK
 
 - Organized by domain, including vision and speech examples
 - The inference interface is `hbm_runtime` (same name as RDK X5, different underlying dependency: S series is based on `libhbucp`, X5 is based on `libdnn`)
-- Legacy demos for the RDK S series are retained in the [RDK Model Zoo S](https://github.com/d-Robotics/rdk_model_zoo_s) repository
+- Legacy demos for the RDK S series are retained in the [RDK Model Zoo S](https://github.com/D-Robotics/rdk_model_zoo_s) repository
 
 </DocScope>
 

@@ -1,0 +1,85 @@
+.title {
+  margin-bottom: 1rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+}
+
+.scopeLine {
+  margin-top: 0.5rem;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.875rem;
+}
+
+.summary {
+  margin-top: 1rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.empty,
+.loading {
+  margin-top: 1rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+
+.item {
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--ifm-global-radius);
+}
+
+.item:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.breadcrumbs {
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.8125rem;
+  margin-bottom: 0.25rem;
+}
+
+.separator {
+  margin: 0 0.35rem;
+}
+
+.hitTitle {
+  color: var(--ifm-link-color);
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.snippet {
+  margin: 0;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.loader {
+  height: 1px;
+}

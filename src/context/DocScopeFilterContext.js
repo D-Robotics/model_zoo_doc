@@ -13,6 +13,7 @@ import {
   resolveCanonicalProductKeyForMatrix,
   resolveProductForVersion,
 } from './doc-scope-product-utils.js';
+import { deriveDefaultScope } from './doc-scope-filter-core.mjs';
 import {
   docScopeSearchMatches,
   isModelZooIntroPath,
@@ -22,9 +23,13 @@ import {
 
 export { PRODUCT_VERSION_MATRIX, VERSION_PRODUCT_MATRIX } from './doc-scope-matrix.js';
 
-/** 中英文统一默认到同一产品/版本（矩阵首项） */
-const DEFAULT_VERSION_ZH = '3.0.0';
-const DEFAULT_PRODUCT_ZH = VERSION_PRODUCT_MATRIX[DEFAULT_VERSION_ZH][0];
+/**
+ * 中英文统一默认到同一产品/版本：矩阵的第一个版本 + 其第一个产品。
+ * SSR、首屏与 Algolia 索引器的默认作用域都以此为准。
+ */
+const MATRIX_DEFAULT_SCOPE = deriveDefaultScope(VERSION_PRODUCT_MATRIX);
+const DEFAULT_VERSION_ZH = MATRIX_DEFAULT_SCOPE.version;
+const DEFAULT_PRODUCT_ZH = MATRIX_DEFAULT_SCOPE.product;
 const DEFAULT_VERSION_EN = DEFAULT_VERSION_ZH;
 const DEFAULT_PRODUCT_EN = DEFAULT_PRODUCT_ZH;
 

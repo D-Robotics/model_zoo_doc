@@ -17,6 +17,27 @@ const copyrightYearLabel =
     ? `${COPYRIGHT_START_YEAR}-${currentYear}`
     : `${COPYRIGHT_START_YEAR}`;
 
+const SITE_BASE_URL = "/model_zoo_doc/";
+const DEFAULT_LOCALE = "zh-Hans";
+const LOCALES = ["zh-Hans", "en"];
+// GitHub Pages 等静态托管只认站点根目录的 404.html（默认语言）。
+// 英文地址 404 时浏览器仍停在 /en/...，但返回的是中文 404.html。
+// 若 html lang 与 URL 语言前缀不一致，改去该语言自己的 404.html。
+const locale404RedirectScript = `(function () {
+  var base = ${JSON.stringify(SITE_BASE_URL)};
+  var locales = ${JSON.stringify(LOCALES.filter((locale) => locale !== DEFAULT_LOCALE))};
+  var path = window.location.pathname || "";
+  if (path.indexOf(base) !== 0) return;
+  var parts = path.slice(base.length).split("/").filter(Boolean);
+  var locale = parts[0];
+  if (locales.indexOf(locale) === -1) return;
+  var page = parts[1] || "";
+  if (page === "404" || page === "404.html") return;
+  var htmlLang = (document.documentElement.getAttribute("lang") || "").toLowerCase();
+  if (htmlLang === locale.toLowerCase()) return;
+  window.location.replace(base + locale + "/404.html");
+})();`;
+
 
 const localePrefix = process.env.DOCUSAURUS_CURRENT_LOCALE === "en" ? "/en" : "";
 
@@ -29,7 +50,7 @@ const config = {
   url: "https://developer.d-robotics.cc",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/model_zoo_doc/",
+  baseUrl: SITE_BASE_URL,
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -81,11 +102,15 @@ const config = {
         "data-website-id": "b0c771b8-947e-4fa4-8880-606ecab89c36",
       },
     },
+    {
+      tagName: "script",
+      innerHTML: locale404RedirectScript,
+    },
   ],
   // add by xgs for translate
   i18n: {
-    defaultLocale: "zh-Hans",
-    locales: ["zh-Hans", "en"],
+    defaultLocale: DEFAULT_LOCALE,
+    locales: LOCALES,
     localeConfigs: {
       en: {
         label: "EN",
@@ -163,6 +188,18 @@ const config = {
     ({
       // Replace with your project's social card
       image: "img/docusaurus-social-card.jpg",
+      // Algolia DocSearch. Search-Only API Key 可以公开；Admin/Write Key 只放 CI Secret。
+      // 索引由 scripts/algolia-index.mjs 在全量重建时写入（不使用 Algolia Crawler）。
+      algolia: {
+        appId: process.env.ALGOLIA_APP_ID || "1VU781LYTV",
+        apiKey:
+          process.env.ALGOLIA_SEARCH_KEY ||
+          "fb65c6e54a52ce6fba0645bd2630e79b",
+        indexName: process.env.ALGOLIA_INDEX_NAME || "model_zoo_doc",
+        // 必须：Docusaurus 会注入 language / docusaurus_tag 上下文过滤
+        contextualSearch: true,
+        searchPagePath: "search",
+      },
       // ✅ 新增：支持 h2 ~ h5 add by xgs for table of contents
     tableOfContents: {
       minHeadingLevel: 2,
@@ -283,25 +320,9 @@ const config = {
     }),
   themes: [
     "@docusaurus/theme-mermaid",
-    [
-      require.resolve("@easyops-cn/docusaurus-search-local"),
-      {
-        // 性能优化
-        hashed: true, // 启用长期缓存
-        language: ["en", "zh"], // 中英文支持
-        highlightSearchTermsOnTargetPage: true,
-        explicitSearchResultPath: true,
-        docsRouteBasePath: ["/", "rdk_s"], // 支持多个文档路径
-        
-        // 优化索引大小和加载速度
-        indexDocs: true,
-        indexBlog: false, // 禁用博客索引
-        indexPages: false, // 禁用页面索引
-        
-        // 搜索行为优化
-        searchResultContextMaxLength: 50, // 减少上下文长度
-      },
-    ],
+    // 搜索已切换为 Algolia（见 themeConfig.algolia）。
+    // 旧的本地搜索 @easyops-cn/docusaurus-search-local 已移除，
+    // Pagefind 全页实现保留在 src/legacy/search-page-pagefind.jsx 备查。
   ],
 };
 
