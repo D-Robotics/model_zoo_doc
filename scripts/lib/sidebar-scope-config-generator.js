@@ -1,59 +1,43 @@
 /**
  * 扫描 docs / i18n 文档，生成侧边栏产品/版本可见性配置（供 Docusaurus 插件与 CLI 共用）。
+ *
+ * 版本解析、产品匹配、docId 归一化统一复用 src/context/doc-scope-filter-core.mjs，
+ * 保证运行时（浏览器）、构建期（本脚本）与 Algolia 索引器使用同一套规则。
  */
 const fs = require('fs');
 const path = require('path');
 const { pathToFileURL } = require('url');
 
 const matrixJsonPath = path.join(__dirname, '../../src/context/doc-scope-matrix.json');
-const { VERSION_PRODUCT_MATRIX } = require(matrixJsonPath);
+const matrixJson = require(matrixJsonPath);
 
 const GENERATED_SIDEBAR_CONFIG_ALIAS = '@generated/generated-sidebar-config.json';
 const GENERATED_SIDEBAR_CONFIG_FILENAME = 'generated-sidebar-config.json';
+const CORE_MODULE_PATH = path.join(__dirname, '../../src/context/doc-scope-filter-core.mjs');
 
 function getGeneratedSidebarConfigPath(siteDir) {
   return path.join(siteDir, '.docusaurus', GENERATED_SIDEBAR_CONFIG_FILENAME);
 }
 
+async function loadCore(siteDir) {
+  const corePath = siteDir
+    ? path.join(siteDir, 'src/context/doc-scope-filter-core.mjs')
+    : CORE_MODULE_PATH;
+  const core = await import(pathToFileURL(corePath).href);
+  return {
+    core,
+    bound: core.createDocScopeCore({
+      VERSION_PRODUCT_MATRIX: matrixJson.VERSION_PRODUCT_MATRIX,
+      PRODUCT_VERSION_MATRIX: matrixJson.PRODUCT_VERSION_MATRIX,
+    }),
+  };
+}
+
 function normalizeProductKey(s) {
   return String(s)
     .trim()
-    .toLocaleLowerCase('en-US')
+    .toLowerCase()
     .replace(/\s+/g, ' ');
-}
-
-let _canonicalLookup = null;
-function getCanonicalLookup() {
-  if (!_canonicalLookup) {
-    const map = new Map();
-    for (const list of Object.values(VERSION_PRODUCT_MATRIX)) {
-      for (const canonical of list) {
-        map.set(normalizeProductKey(canonical), canonical);
-      }
-    }
-    _canonicalLookup = map;
-  }
-  return _canonicalLookup;
-}
-
-function resolveCanonicalProduct(input) {
-  if (input == null || String(input).trim() === '') {
-    return null;
-  }
-  return getCanonicalLookup().get(normalizeProductKey(input)) ?? null;
-}
-
-function normalizeScopeProductList(products) {
-  if (!Array.isArray(products)) {
-    return [];
-  }
-  return products.map((p) => {
-    if (typeof p !== 'string') {
-      return p;
-    }
-    const c = resolveCanonicalProduct(p);
-    return c ?? p.trim();
-  });
 }
 
 function normalizeProductSeriesKey(s) {
@@ -68,15 +52,15 @@ function normalizeProductSeriesKey(s) {
   if (!suffix) {
     return null;
   }
-  return normalizeProductKey(`RDK ${suffix}`);
+  return normalizeProductKey('RDK ' + suffix);
 }
 
 function productBelongsToSeries(productEntry, seriesKey) {
   const current = normalizeProductKey(productEntry);
-  return current === seriesKey || current.startsWith(`${seriesKey} `);
+  return current === seriesKey || current.startsWith(seriesKey + ' ');
 }
 
-function mergeProducts(existingProducts, incomingProducts) {
+function mergeProducts(existingProducts, incomingProducts, normalizeScopeProductList) {
   const merged = normalizeScopeProductList([
     ...(Array.isArray(existingProducts) ? existingProducts : []),
     ...(Array.isArray(incomingProducts) ? incomingProducts : []),
@@ -111,14 +95,14 @@ function mergeProducts(existingProducts, incomingProducts) {
 
 function versionConfigKey(config) {
   if (typeof config === 'string') {
-    return `str::${config.trim()}`;
+    return 'str::' + config.trim();
   }
   if (config && typeof config === 'object') {
     const op = String(config.operator || '').trim();
     const version = String(config.version || '').trim();
-    return `obj::${op}::${version}`;
+    return 'obj::' + op + '::' + version;
   }
-  return `raw::${String(config)}`;
+  return 'raw::' + String(config);
 }
 
 function mergeVersions(existingVersions, incomingVersions) {
@@ -139,66 +123,20 @@ function mergeVersions(existingVersions, incomingVersions) {
   return out;
 }
 
-function mergeScopeConfig(existingScope, incomingScope) {
+function mergeScopeConfig(existingScope, incomingScope, normalizeScopeProductList) {
   if (!existingScope) {
     return incomingScope;
   }
   return {
     versions: mergeVersions(existingScope.versions, incomingScope.versions),
-    products: mergeProducts(existingScope.products, incomingScope.products),
+    products: mergeProducts(
+      existingScope.products,
+      incomingScope.products,
+      normalizeScopeProductList,
+    ),
     isCategory: Boolean(existingScope.isCategory || incomingScope.isCategory),
+    exclude: Boolean(existingScope.exclude || incomingScope.exclude),
   };
-}
-
-function parseVersionExpression(versionStr) {
-  if (!versionStr || typeof versionStr !== 'string') {
-    return null;
-  }
-
-  let trimmed = versionStr.trim();
-  if (
-    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
-    (trimmed.startsWith("'") && trimmed.endsWith("'"))
-  ) {
-    trimmed = trimmed.slice(1, -1).trim();
-  }
-
-  const match = trimmed.match(/^(>=|<=|>|<)?\s*(\d+(?:\.\d+)*)$/);
-  if (!match) {
-    return null;
-  }
-
-  return {
-    operator: match[1] || '',
-    version: match[2],
-    original: versionStr,
-  };
-}
-
-function parseScopeList(value) {
-  if (value == null) return [];
-
-  if (Array.isArray(value)) {
-    return value.map((v) => {
-      if (typeof v === 'string') {
-        const parsed = parseVersionExpression(v);
-        return parsed || { operator: '', version: v, original: v };
-      }
-      return v;
-    });
-  }
-
-  const s = String(value).trim();
-  if (s === '' || s === '*') return [];
-
-  return s
-    .split(/[,，]/)
-    .map((x) => x.trim())
-    .filter(Boolean)
-    .map((v) => {
-      const parsed = parseVersionExpression(v);
-      return parsed || { operator: '', version: v, original: v };
-    });
 }
 
 function extractFrontMatter(filePath) {
@@ -224,17 +162,18 @@ function extractFrontMatter(filePath) {
   }
 }
 
-function extractSidebarScopeConfig(filePath) {
+function extractSidebarScopeConfig(filePath, core) {
   try {
     const config = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    if (config.versions || config.products) {
+    if (config.versions || config.products || config.exclude) {
       return {
-        versions: parseScopeList(config.versions),
+        versions: core.parseVersionScopeList(config.versions),
         products: Array.isArray(config.products)
           ? config.products
           : typeof config.products === 'string'
             ? config.products.split(/[,，]/).map((x) => x.trim()).filter(Boolean)
             : [],
+        exclude: Boolean(config.exclude),
       };
     }
     return null;
@@ -248,52 +187,62 @@ function formatVersions(versions) {
   return versions
     .map((v) => {
       if (typeof v === 'object' && v.operator) {
-        return `${v.operator} ${v.version}`;
+        return v.operator + ' ' + v.version;
       }
       return typeof v === 'object' ? v.version : v;
     })
     .join(', ');
 }
 
-function scanDirectory(dir, baseDir, config, idUtils, verbose) {
+function scanDirectory(dir, baseDir, config, helpers, verbose) {
   if (!fs.existsSync(dir)) {
     return;
   }
+
+  const { core, bound, normalizeScopeProductList } = helpers;
 
   for (const item of fs.readdirSync(dir)) {
     const fullPath = path.join(dir, item);
     const stat = fs.statSync(fullPath);
 
     if (stat.isDirectory()) {
-      scanDirectory(fullPath, baseDir, config, idUtils, verbose);
+      scanDirectory(fullPath, baseDir, config, helpers, verbose);
       continue;
     }
 
     if (item === '_sidebar_scope.json') {
-      const scopeConfig = extractSidebarScopeConfig(fullPath);
+      const scopeConfig = extractSidebarScopeConfig(fullPath, core);
       if (!scopeConfig) {
         continue;
       }
 
       const folderPath = path.relative(baseDir, path.dirname(fullPath)).replace(/\\/g, '/');
-      const folderId = idUtils.normalizeDocIdFromPath(folderPath);
+      const folderId = core.normalizeDocIdFromPath(folderPath);
       const productsNorm = normalizeScopeProductList(scopeConfig.products);
-      config[folderId] = mergeScopeConfig(config[folderId], {
-        versions: scopeConfig.versions,
-        products: productsNorm,
-        isCategory: true,
-      });
+      config[folderId] = mergeScopeConfig(
+        config[folderId],
+        {
+          versions: scopeConfig.versions,
+          products: productsNorm,
+          isCategory: true,
+          exclude: scopeConfig.exclude,
+        },
+        normalizeScopeProductList,
+      );
 
       if (verbose) {
-        console.log(`Found folder config: ${folderPath}`);
-        console.log(`  folderId: ${folderId}`);
-        console.log(`  versions: ${formatVersions(scopeConfig.versions)}`);
-        console.log(`  products: ${productsNorm.join(', ') || 'all products'}`);
+        console.log('Found folder config: ' + folderPath);
+        console.log('  folderId: ' + folderId);
+        console.log('  versions: ' + formatVersions(scopeConfig.versions));
+        console.log('  products: ' + (productsNorm.join(', ') || 'all products'));
+        if (scopeConfig.exclude) {
+          console.log('  exclude: true');
+        }
       }
       continue;
     }
 
-    if (!item.endsWith('.md')) {
+    if (!item.endsWith('.md') && !item.endsWith('.mdx')) {
       continue;
     }
 
@@ -304,10 +253,10 @@ function scanDirectory(dir, baseDir, config, idUtils, verbose) {
 
     const relativePath = path
       .relative(baseDir, fullPath)
-      .replace(/\.md$/, '')
+      .replace(/\.(md|mdx)$/, '')
       .replace(/\\/g, '/');
-    const scopeKeys = idUtils.collectDocScopeKeys(relativePath, frontMatter.id);
-    const versions = parseScopeList(frontMatter.sidebar_versions);
+    const scopeKeys = core.collectDocScopeKeys(relativePath, frontMatter.id);
+    const versions = core.parseVersionScopeList(frontMatter.sidebar_versions);
 
     let products = [];
     if (frontMatter.sidebar_products) {
@@ -326,16 +275,16 @@ function scanDirectory(dir, baseDir, config, idUtils, verbose) {
     }
 
     const productsNorm = normalizeScopeProductList(products);
-    const nextScope = { versions, products: productsNorm };
+    const nextScope = { versions, products: productsNorm, isCategory: false, exclude: false };
     for (const key of scopeKeys) {
-      config[key] = mergeScopeConfig(config[key], nextScope);
+      config[key] = mergeScopeConfig(config[key], nextScope, normalizeScopeProductList);
     }
 
     if (verbose) {
-      console.log(`Found document config: ${relativePath}`);
-      console.log(`  docId keys: ${scopeKeys.join(', ')}`);
-      console.log(`  versions: ${formatVersions(versions)}`);
-      console.log(`  products: ${productsNorm.join(', ') || 'all products'}`);
+      console.log('Found document config: ' + relativePath);
+      console.log('  docId keys: ' + scopeKeys.join(', '));
+      console.log('  versions: ' + formatVersions(versions));
+      console.log('  products: ' + (productsNorm.join(', ') || 'all products'));
     }
   }
 }
@@ -344,30 +293,31 @@ function validateSidebarScopeConfig(config) {
   const errors = [];
   for (const key of Object.keys(config)) {
     if (/^\d+_/.test(key) || /\/\d+_/.test(key)) {
-      errors.push(`config key "${key}" contains an unparsed numeric prefix`);
+      errors.push('config key "' + key + '" contains an unparsed numeric prefix');
     }
     if (key !== key.toLowerCase()) {
-      errors.push(`config key "${key}" must be lowercase`);
+      errors.push('config key "' + key + '" must be lowercase');
     }
   }
   return errors;
 }
 
-async function loadDocScopeIdUtils(siteDir) {
-  const modulePath = path.join(siteDir, 'src/context/doc-scope-id-utils.mjs');
-  return import(pathToFileURL(modulePath).href);
-}
-
-async function buildSidebarScopeConfig({ docsDir, i18nEnDocsCurrentDir, siteDir, verbose = false }) {
-  const { collectDocScopeKeys, normalizeDocIdFromPath } = await loadDocScopeIdUtils(siteDir);
-  const idUtils = { collectDocScopeKeys, normalizeDocIdFromPath };
+async function buildSidebarScopeConfig({
+  docsDir,
+  i18nEnDocsCurrentDir,
+  siteDir,
+  verbose = false,
+}) {
+  const { core, bound } = await loadCore(siteDir);
+  const normalizeScopeProductList = bound.normalizeScopeProductList;
+  const helpers = { core, bound, normalizeScopeProductList };
   const config = {};
 
   if (fs.existsSync(docsDir)) {
     if (verbose) {
       console.log('Scanning docs directory:');
     }
-    scanDirectory(docsDir, docsDir, config, idUtils, verbose);
+    scanDirectory(docsDir, docsDir, config, helpers, verbose);
     if (verbose) {
       console.log('');
     }
@@ -376,7 +326,7 @@ async function buildSidebarScopeConfig({ docsDir, i18nEnDocsCurrentDir, siteDir,
     if (verbose) {
       console.log('Scanning i18n/en/docusaurus-plugin-content-docs/current directory:');
     }
-    scanDirectory(i18nEnDocsCurrentDir, i18nEnDocsCurrentDir, config, idUtils, verbose);
+    scanDirectory(i18nEnDocsCurrentDir, i18nEnDocsCurrentDir, config, helpers, verbose);
     if (verbose) {
       console.log('');
     }
@@ -407,7 +357,7 @@ async function buildAndWriteSidebarScopeConfig({
   if (errors.length > 0) {
     console.error('\nConfig format validation failed:\n');
     for (const err of errors) {
-      console.error(`  - ${err}`);
+      console.error('  - ' + err);
     }
     console.error('');
     throw new Error('sidebar scope config validation failed');
@@ -422,8 +372,8 @@ async function buildAndWriteSidebarScopeConfig({
   fs.writeFileSync(configFilePath, JSON.stringify(config, null, 2), 'utf-8');
 
   if (verbose) {
-    console.log(`Config file written: ${configFilePath}`);
-    console.log(`Found ${Object.keys(config).length} config entries\n`);
+    console.log('Config file written: ' + configFilePath);
+    console.log('Found ' + Object.keys(config).length + ' config entries\n');
   }
 
   return config;

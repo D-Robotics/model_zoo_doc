@@ -342,7 +342,37 @@ function useSearchParams() {
 function SearchPagePagefindDisabled() {
   const { query, tab } = useSearchParams();
   const { product, version } = useDocScopeFilter();
-  const { siteConfig } = useDocusaurusContext();
+  const { siteConfig, i18n } = useDocusaurusContext();
+  const isEnglish = i18n.currentLocale === "en";
+  const text = isEnglish
+    ? {
+        missingIndex:
+          "Pagefind index not found for the current product/version. Run npm run prepare-pagefind-dev or npm run build:pagefind:matrix.",
+        placeholder: "Search",
+        resultTitle: "Search results",
+        searchUnavailable: "Search is temporarily unavailable.",
+        pageTitle: "Search results",
+        pageDescription: "View all search results.",
+        localTab: "This documentation",
+        studioTab: "RDK Studio results",
+        localEmpty: "No matching content in this documentation.",
+        studioTitle: "Related RDK Studio results",
+        studioEmpty: "No matching RDK Studio content.",
+      }
+    : {
+        missingIndex:
+          "未找到当前产品/版本的 Pagefind 索引。请执行 npm run prepare-pagefind-dev 或 npm run build:pagefind:matrix。",
+        placeholder: "搜索",
+        resultTitle: "搜索结果",
+        searchUnavailable: "本文档搜索暂不可用",
+        pageTitle: "搜索结果",
+        pageDescription: "查看所有搜索结果",
+        localTab: "本文档结果",
+        studioTab: "RDK Studio 结果",
+        localEmpty: "未命中本文档内容",
+        studioTitle: "RDK Studio 相关结果",
+        studioEmpty: "未命中 RDK Studio 内容",
+      };
   const staticBaseUrl = siteConfig.baseUrl;
   const standaloneRef = useRef(null);
   const containerRef = useRef(null);
@@ -395,9 +425,7 @@ function SearchPagePagefindDisabled() {
       if (disposed) return;
 
       if (!chosen) {
-        setError(
-          "未找到当前产品/版本的 Pagefind 索引。请执行 npm run prepare-pagefind-dev 或 npm run build:pagefind:matrix。",
-        );
+        setError(text.missingIndex);
         return;
       }
 
@@ -424,7 +452,7 @@ function SearchPagePagefindDisabled() {
         showSubResults: true,
         resetStyles: false,
         translations: {
-          placeholder: "搜索",
+          placeholder: text.placeholder,
         },
       });
     }
@@ -589,7 +617,7 @@ function SearchPagePagefindDisabled() {
               data?.meta?.title ||
               data?.title ||
               data?.url ||
-              "搜索结果",
+              text.resultTitle,
             url: scopedUrl,
             excerpt: highlightExactInHtml(candidate?.excerpt || data?.excerpt || "", term),
           });
@@ -607,7 +635,7 @@ function SearchPagePagefindDisabled() {
               : [
                   {
                     url: data?.url || "#",
-                    title: data?.meta?.title || data?.title || data?.url || "搜索结果",
+                    title: data?.meta?.title || data?.title || data?.url || text.resultTitle,
                     excerpt: data?.excerpt || "",
                   },
                 ];
@@ -624,7 +652,7 @@ function SearchPagePagefindDisabled() {
             tryAppendCandidate(
               {
                 url: data?.url || "#",
-                title: data?.meta?.title || data?.title || data?.url || "搜索结果",
+                title: data?.meta?.title || data?.title || data?.url || text.resultTitle,
                 excerpt: data?.excerpt || "",
               },
               data,
@@ -641,7 +669,7 @@ function SearchPagePagefindDisabled() {
         if (disposed) return;
         setLocalResults([]);
         setLocalResultCount(0);
-        setLocalSearchError(e?.message || "本文档搜索暂不可用");
+        setLocalSearchError(e?.message || text.searchUnavailable);
       }
     }, 80);
 
@@ -800,7 +828,7 @@ function SearchPagePagefindDisabled() {
   }, [q, staticBaseUrl, studioBundlePath]);
 
   return (
-    <Layout title="搜索结果" description="查看所有搜索结果">
+    <Layout title={text.pageTitle} description={text.pageDescription}>
       <main className="container margin-vert--lg pagefind-search-page">
         <div
           ref={standaloneRef}
@@ -815,14 +843,14 @@ function SearchPagePagefindDisabled() {
                 className={`pagefind-search-tab${activeTab === "local" ? " is-active" : ""}`}
                 onClick={() => setActiveTab("local")}
               >
-                本文档结果
+                {text.localTab}
               </button>
               <button
                 type="button"
                 className={`pagefind-search-tab${activeTab === "studio" ? " is-active" : ""}`}
                 onClick={() => setActiveTab("studio")}
               >
-                RDK Studio 结果
+                {text.studioTab}
               </button>
             </div>
           ) : null}
@@ -833,7 +861,7 @@ function SearchPagePagefindDisabled() {
                   <div className="external-search-error">{localSearchError}</div>
                 ) : null}
                 {!localSearchError && localResults.length === 0 ? (
-                  <div className="external-search-empty">未命中本文档内容</div>
+                  <div className="external-search-empty">{text.localEmpty}</div>
                 ) : null}
                 {!localSearchError && localResults.length > 0 ? (
                   <ul className="external-search-list">
@@ -852,10 +880,10 @@ function SearchPagePagefindDisabled() {
           </div>
           {q.trim().length >= 1 && activeTab === "studio" ? (
             <div className="external-search-block">
-              <div className="external-search-title">RDK Studio 相关结果</div>
+              <div className="external-search-title">{text.studioTitle}</div>
               {studioError ? <div className="external-search-error">{studioError}</div> : null}
               {!studioError && studioResults.length === 0 ? (
-                <div className="external-search-empty">未命中 RDK Studio 内容</div>
+                <div className="external-search-empty">{text.studioEmpty}</div>
               ) : null}
               {!studioError && studioResults.length > 0 ? (
                 <ul className="external-search-list">
@@ -887,13 +915,22 @@ function SearchPagePagefindDisabled() {
 }
 
 function SearchPageAlgoliaDisabledNotice() {
+  const { i18n } = useDocusaurusContext();
+  const isEnglish = i18n.currentLocale === "en";
   return (
-    <Layout title="搜索" description="Algolia 搜索入口">
+    <Layout
+      title={isEnglish ? "Search" : "搜索"}
+      description={isEnglish ? "Algolia search entry" : "Algolia 搜索入口"}
+    >
       <main className="container margin-vert--lg pagefind-search-page">
         <div className="external-search-block" style={{ position: "static", width: "100%" }}>
-          <div className="external-search-title">已切换为 Algolia 搜索</div>
+          <div className="external-search-title">
+            {isEnglish ? "Switched to Algolia search" : "已切换为 Algolia 搜索"}
+          </div>
           <div className="external-search-empty">
-            请使用顶部搜索框进行搜索（旧的 /search Pagefind 页面已临时停用，代码保留在本文件中）。
+            {isEnglish
+              ? "Use the search box at the top of the page. The legacy Pagefind /search page is temporarily disabled; its code is kept in this file."
+              : "请使用顶部搜索框进行搜索（旧的 /search Pagefind 页面已临时停用，代码保留在本文件中）。"}
           </div>
         </div>
       </main>

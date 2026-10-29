@@ -68,7 +68,7 @@ result = outputs[model_name][output_names[0]]
 
 </DocScope>
 
-<DocScope versions=">=4.0.5" products="RDK S100/S600">
+<DocScope versions=">=4.0.5">
 
 ### RDK S 系列调用流程
 

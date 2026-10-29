@@ -1,6 +1,6 @@
 ---
 sidebar_position: 4
-sidebar_products: "RDK S100/S600"
+sidebar_products: "RDK S100, RDK S600"
 ---
 
 # 4.1.4 Usage Guide
@@ -87,9 +87,9 @@ sample_name/
 
 The RDK S series Python samples uniformly use the `hbm_runtime` inference interface, which shares the same interface name as RDK X5's `hbm_runtime`, but with different underlying dependencies: RDK S series is based on `libhbucp`, while RDK X5 is based on `libdnn`.
 
-For the complete interface reference 👉 [RDK S hbm_runtime Python API Documentation](./02_Python_API.md)
+For the complete interface reference [RDK S hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_s_doc/en/Basic_Application/multi_media_sp_dev_api/RDK_s100/pydev_multimedia_api_/ai-python-api)
 
-C/C++ inference interface documentation: **UCP (`hb_ucp`) Interface Documentation** 👉 [UCP Overview](https://toolchain.d-robotics.cc/guide/ucp/ucp_overview.html)
+C/C++ inference interface documentation: **UCP (`hb_ucp`) Interface Documentation** 👉 [Overview](https://developer.d-robotics.cc/oe_s_doc/en/guide/ucp/ucp_overview)
 
 ### hbm_runtime Basic Call Flow
 

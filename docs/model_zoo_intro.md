@@ -86,7 +86,7 @@ RDK S100 / S600 系列板卡专用分支，需系统版本 RDK OS >= 4.0.5。
 
 - 按领域组织 sample，包含视觉和语音示例
 - 推理接口为 `hbm_runtime`（与 RDK X5 同名，底层依赖不同：S 系列基于 `libhbucp`，X5 基于 `libdnn`）
-- RDK S 系列的历史 demo 保留在 [RDK Model Zoo S](https://github.com/d-Robotics/rdk_model_zoo_s) 仓库
+- RDK S 系列的历史 demo 保留在 [RDK Model Zoo S](https://github.com/D-Robotics/rdk_model_zoo_s) 仓库
 
 </DocScope>
 

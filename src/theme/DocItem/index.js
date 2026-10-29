@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useHistory, useLocation } from "@docusaurus/router";
 import { useDocsSidebar } from "@docusaurus/plugin-content-docs/client";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -113,6 +113,14 @@ export default function DocItemWrapper(props) {
 
   const docId = props?.content?.metadata?.id || "";
 
+  /**
+   * SSR 阶段始终渲染正文：搜索引擎（以及 scripts/algolia-index.mjs）读取的是
+   * 静态 HTML，若在这里按作用域返回 null，非默认产品/版本的文档就没有可索引的正文。
+   * hydration 完成后再按当前作用域隐藏并跳转，因此对用户不可见。
+   */
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => setIsMounted(true), []);
+
   const skipSidebarScope = isMultiInstanceDocsRoute(
     location.pathname,
     siteConfig.baseUrl,
@@ -200,7 +208,7 @@ export default function DocItemWrapper(props) {
     }
   }, [visible, skipSidebarScope, currentDocDisplayNumber, docId]);
 
-  if (!visible) {
+  if (!visible && isMounted) {
     return null;
   }
 

@@ -3,6 +3,46 @@
     "message": "Next",
     "description": "The label for version current"
   },
+  "sidebar.tutorialSidebar.category.6. 附录": {
+    "message": "6. Appendix",
+    "description": "The label for category 6. 附录 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6. 附录.link.generated-index.description": {
+    "message": "Model Zoo benchmark summary.",
+    "description": "The generated-index page description for category 6. 附录 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6.1 Benchmark": {
+    "message": "6.1 Benchmark",
+    "description": "The label for category 6.1 Benchmark in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6.1 Benchmark.link.generated-index.description": {
+    "message": "RDK X5 benchmark summary.",
+    "description": "The generated-index page description for category 6.1 Benchmark in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6.2 Benchmark": {
+    "message": "6.2 Benchmark",
+    "description": "The label for category 6.2 Benchmark in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6.2 Benchmark.link.generated-index.description": {
+    "message": "RDK X3 benchmark summary.",
+    "description": "The generated-index page description for category 6.2 Benchmark in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6.3 Benchmark": {
+    "message": "6.3 Benchmark",
+    "description": "The label for category 6.3 Benchmark in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6.3 Benchmark.link.generated-index.description": {
+    "message": "RDK S100 benchmark summary.",
+    "description": "The generated-index page description for category 6.3 Benchmark in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6.4 Benchmark": {
+    "message": "6.4 Benchmark",
+    "description": "The label for category 6.4 Benchmark in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.6.4 Benchmark.link.generated-index.description": {
+    "message": "RDK S600 benchmark summary.",
+    "description": "The generated-index page description for category 6.4 Benchmark in sidebar tutorialSidebar"
+  },
   "sidebar.tutorialSidebar.category.1. 快速开始": {
     "message": "1. Quick Start",
     "description": "The label for category 1. 快速开始 in sidebar tutorialSidebar"
@@ -24,11 +64,11 @@
     "description": "The label for category 1.5 显示屏使用 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.RDK X3/X5（Python）": {
-    "message": "RDK X3/X5（Python）",
+    "message": "RDK X3/X5 (Python)",
     "description": "The label for category RDK X3/X5（Python） in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.RDK X3/X5（C++）": {
-    "message": "RDK X3/X5（C++）",
+    "message": "RDK X3/X5 (C++)",
     "description": "The label for category RDK X3/X5（C++） in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.2. 系统配置": {
@@ -316,11 +356,11 @@
     "description": "The generated-index page description for category 1.9.6 示例应用 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.RDK Ultra（Python）": {
-    "message": "RDK Ultra（Python）",
+    "message": "RDK Ultra (Python)",
     "description": "The label for category RDK Ultra（Python） in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category. RDK Ultra（C++）": {
-    "message": " RDK Ultra（C++）",
+    "message": "RDK Ultra (C++)",
     "description": "The label for category  RDK Ultra（C++） in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.1.2.1 RDK X3": {

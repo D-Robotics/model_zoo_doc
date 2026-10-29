@@ -1342,3 +1342,16 @@ main article table {
 .medium-zoom-overlay {
   z-index: 2000;
 }
+
+/* ------------------------------------------------------------------ */
+/* Algolia 搜索结果高亮（索引器写入的 highlightPreTag 类名） */
+.search-result-match {
+  color: inherit;
+  background: rgba(84, 199, 236, 0.28);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+[data-theme="dark"] .search-result-match {
+  background: rgba(84, 199, 236, 0.32);
+}
