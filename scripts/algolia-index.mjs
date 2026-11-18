@@ -28,6 +28,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createRequire } from 'node:module';
 import * as cheerio from 'cheerio';
+import { writeEasyopsIndex } from './easyops-index.mjs';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -806,73 +807,6 @@ async function uploadIndex(records, probe) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Offline index (optional)                                                    */
-/* -------------------------------------------------------------------------- */
-
-function writeOfflineIndex(filePath, fineRecords, defaultLocale) {
-  const docs = [];
-  const headings = [];
-  const summaries = [];
-  const contents = [];
-  const docIndex = new Map();
-
-  for (const record of fineRecords) {
-    if (record.language !== defaultLocale) continue;
-    const baseUrl = record.url_without_anchor;
-    let pageIndex = docIndex.get(baseUrl);
-    if (pageIndex == null) {
-      pageIndex = docs.length;
-      docIndex.set(baseUrl, pageIndex);
-      docs.push({
-        i: pageIndex,
-        t: record.hierarchy.lvl1 || record.hierarchy.lvl0 || '',
-        u: baseUrl,
-        b: ['lvl0', 'lvl1', 'lvl2']
-          .map((key) => record.hierarchy[key])
-          .filter(Boolean),
-      });
-    }
-    if (record.type === 'content') {
-      contents.push({
-        i: 'c' + contents.length,
-        t: record.content,
-        u: baseUrl,
-        p: pageIndex,
-        h: record.hierarchy.lvl1 || undefined,
-        s: record.anchor || undefined,
-      });
-    } else {
-      headings.push({
-        i: 'h' + headings.length,
-        t: record.hierarchy[record.type] || '',
-        u: record.url,
-        h: record.type,
-        p: pageIndex,
-      });
-      if (!record.anchor) {
-        summaries.push({
-          i: 's' + summaries.length,
-          t: record.hierarchy[record.type] || '',
-          u: baseUrl,
-          p: pageIndex,
-        });
-      }
-    }
-  }
-
-  const payload = [
-    { documents: docs },
-    { documents: headings },
-    { documents: summaries },
-    { documents: [] },
-    { documents: contents },
-  ];
-  fs.mkdirSync(path.dirname(path.resolve(filePath)), { recursive: true });
-  fs.writeFileSync(path.resolve(filePath), JSON.stringify(payload), 'utf8');
-  log('offline search index written: ' + path.resolve(filePath));
-}
-
-/* -------------------------------------------------------------------------- */
 /* Main                                                                        */
 /* -------------------------------------------------------------------------- */
 
@@ -967,9 +901,13 @@ async function main() {
     log('  language ' + language + ': ' + count + ' fine records');
   }
 
-  if (OFFLINE_OUT) {
-    writeOfflineIndex(OFFLINE_OUT, fineRecords, DEFAULT_LOCALE);
-  }
+  // MCP 读取的 search-index.json 与 Algolia 索引是两份产物，必须一起产出。
+  // 上传由 workflow 用 ossutil 覆盖到站点根目录。
+  writeEasyopsIndex(
+    fineRecords,
+    OFFLINE_OUT || path.join(repoRoot, 'scripts/_algolia_tmp/search-index.json'),
+    { titleType: 'lvl1' },
+  );
 
   const sampleSource = uploadRecords.find((record) => record.type === 'content') || uploadRecords[0];
   if (sampleSource) {
