@@ -1248,18 +1248,64 @@ mark.search-highlight {
 }
 
 /* ------------------------------------------------------------------ */
-/* 文档正文表格：占满正文内容区，不侵入 TOC；超宽时表格自身横向滚动。 */
+/* 文档正文表格：统一紧凑字号与内边距，表头/链接/宽表数据保持单行，超宽时表格自身横向滚动。 */
 .theme-doc-markdown.markdown table,
 article.markdown table,
 main .container article table,
 main article table {
   display: block;
-  width: 100% !important;
+  width: fit-content;
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   box-sizing: border-box;
   border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+.theme-doc-markdown.markdown table th,
+.theme-doc-markdown.markdown table td,
+article.markdown table th,
+article.markdown table td,
+main article table th,
+main article table td {
+  padding: 0.5rem 0.75rem;
+  vertical-align: middle;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.theme-doc-markdown.markdown table th,
+article.markdown table th,
+main article table th {
+  white-space: nowrap;
+  font-weight: 600;
+  background-color: var(--ifm-table-head-background, var(--ifm-color-emphasis-100));
+}
+
+.theme-doc-markdown.markdown table td a,
+.theme-doc-markdown.markdown table td code,
+article.markdown table td a,
+article.markdown table td code,
+main article table td a,
+main article table td code {
+  white-space: nowrap;
+}
+
+/* 4 列及以上表格的首列通常为类别/平台/模型短标签，禁止被长文本列挤压换行 */
+.theme-doc-markdown.markdown table:has(th:nth-child(4)) td:first-child,
+article.markdown table:has(th:nth-child(4)) td:first-child,
+main article table:has(th:nth-child(4)) td:first-child {
+  white-space: nowrap;
+}
+
+/* 6 列及以上宽表（硬件参数表、附录 Benchmark 汇总表）：单元格保持单行并横向滚动，避免型号名/数值折行 */
+.theme-doc-markdown.markdown table:has(th:nth-child(6)) td,
+article.markdown table:has(th:nth-child(6)) td,
+main article table:has(th:nth-child(6)) td {
+  white-space: nowrap;
 }
 
 /* 右侧导航栏（TOC）位置调整，与左侧目录对齐 */
