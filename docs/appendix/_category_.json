@@ -4,6 +4,6 @@
   "link": {
     "type": "generated-index",
     "slug": "/Appendix",
-    "description": "Model Zoo Benchmark 汇总。"
+    "description": "Model Zoo Benchmark 汇总（完整在线模型目录与实时性能检索见 https://d-robotics.github.io/rdk_model_zoo/）。"
   }
 }

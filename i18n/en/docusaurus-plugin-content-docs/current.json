@@ -8,7 +8,7 @@
     "description": "The label for category 6. 附录 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.6. 附录.link.generated-index.description": {
-    "message": "Model Zoo benchmark summary.",
+    "message": "Model Zoo benchmark summary (see https://d-robotics.github.io/rdk_model_zoo/ for the full interactive Web Model Catalog).",
     "description": "The generated-index page description for category 6. 附录 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.6.1 Benchmark": {

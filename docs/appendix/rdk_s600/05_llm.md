@@ -116,3 +116,17 @@ sidebar_position: 5
 </tbody>
 </table>
 
+## Model Zoo S600 大模型示例（Gemma4 / MiniCPM5-2B / OELLM 套件）
+
+Model Zoo `main` 分支已集成以下 RDK S600 端侧大模型与多模态示例（完整 32 个官方 OELLM SDK 2.0.0 文本/视觉/语音配置见 [`samples/llm/oellm`](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/llm/oellm)）：
+
+| model | BPU core num | qtype | max context | TTFT (ms) | Decode (TPS) | memory (GB) | GitHub仓库 |
+| :--- | :--- | :--- | ---: | ---: | ---: | ---: | :--- |
+| Gemma4-E2B（SDK 2.0.0） | 4 | w4 | 4096 | 74 | 61.2 | 9.9 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/llm/gemma4) |
+| Gemma4-E2B（SDK 2.0.0） | 4 | w8 | 4096 | 79 | 47.8 | 13.5 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/llm/gemma4) |
+| Gemma4-E4B（SDK 2.0.0） | 4 | w4 | 4096 | 137 | 38.3 | 15.4 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/llm/gemma4) |
+| Gemma4-E4B（SDK 2.0.0） | 4 | w8 | 4096 | 139 | 27.9 | 15.5 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/llm/gemma4) |
+| MiniCPM5-2B（原生 C++） | 4 | OELLM 2.0 beta | 4096 | 147.86 | 53.25 | - | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/llm/minicpm5-2b) |
+
+> 更多 S600 模型（如 Qwen3 / Qwen3.5 / Qwen3-VL / InternVL / Whisper / Gemma4-E2B 原生 C++ VLM）请查阅 [`samples/llm/`](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/llm) 与 [在线模型目录](https://d-robotics.github.io/rdk_model_zoo/)。
+
