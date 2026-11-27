@@ -10,27 +10,35 @@ import DocScope from '@site/src/components/DocScope';
 
 ## 概述
 
-Model Zoo 的 Python 推理接口按硬件平台和分支选择：
+Model Zoo 的推理接口按硬件平台和分支选择。在统一交付分支 **`main`**（v2.0.0+）中，RDK X5 与 RDK S 系列（S100 / S100P / S600）的视觉、语音及机器人 Python sample 统一使用 **`hbm_runtime`**，C++ sample 分别使用 `hb_dnn` / `hb_ucp`，端侧 LLM / VLM 示例使用原生 C++ 或官方 OELLM SDK：
 
-| 平台 | 分支 | 推理接口 | 接口来源 |
-| :--- | :--- | :--- | :--- |
-| RDK X5 | `rdk_x5` | `hbm_runtime` | 板端系统自带 |
-| RDK X5（历史） | `rdk_x5_legacy` | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | 手动安装 / 板端自带 |
-| RDK X3 | `rdk_x3` | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | 手动安装 / 板端自带 |
-| RDK S 系列 | `rdk_s` | `hbm_runtime` | 板端系统自带 |
+| 平台 | 分支 | Python 接口 | C/C++ 接口 | 接口来源 |
+| :--- | :--- | :--- | :--- | :--- |
+| **RDK X5** | `main`（推荐）/ `rdk_x5` | `hbm_runtime` | `hb_dnn` | 板端自带 |
+| **RDK S 系列** | `main`（推荐）/ `rdk_s` | `hbm_runtime` | `hb_ucp` / `hb_dnn` / OELLM | 板端自带 / OELLM SDK |
+| RDK X5（历史） | `rdk_x5_legacy` | `bpu_infer_lib_x5` / `pyeasy_dnn` | `hb_dnn` | 手动安装 / 板端自带 |
+| RDK X3（归档） | `rdk_x3` | `bpu_infer_lib_x3` / `pyeasy_dnn` | `hb_dnn` | 手动安装 / 板端自带 |
 
 ## hbm_runtime 接口
 
-`hbm_runtime` 是 RDK X5 和 RDK S 系列统一使用的 Python 推理接口，接口名称一致，但底层依赖、模型格式和输入方式存在差异：
+`hbm_runtime` 是 RDK X5 和 RDK S 系列统一使用的 Python 推理接口，接口名称一致，但底层依赖、模型格式和 NV12 输入方式存在差异：
 
-| 项目 | RDK X5 | RDK S 系列 |
+| 项目 | RDK X5 | RDK S 系列（S100 / S100P / S600） |
 | :--- | :--- | :--- |
 | 底层依赖 | `libdnn` | `libhbucp` |
-| 模型格式 | `.bin` | `.hbm` |
+| 模型格式 | `.bin`（Bayes-E） | `.hbm`（Nash-E / Nash-M / Nash-P） |
 | 安装包 | `hobot-spdev`（板端自带） | `hobot-dnn`（板端自带） |
 | NV12 输入方式 | 单个 packed 输入（Y+UV 拼接） | 双输入（Y 与 UV 分离） |
+| 仓库公共封装 | `utils/py_utils/runtime.py`（`RuntimeSession`） | `utils/py_utils/runtime.py`（`RuntimeSession`） |
+
+:::tip
+
+在统一 `main` 分支中，`utils/py_utils/runtime.py`（`RuntimeSession`）与 `utils/py_utils/platforms.py` 在 `hbm_runtime` 之上封装了板卡身份识别、目标匹配校验与统一会话生命周期管理；各 sample 在自己的 `<task>.py` 中清晰实现 `preprocess → infer → postprocess` 三阶段。
+
+:::
 
 <DocScope versions=">=3.5.0" products="RDK X5">
+
 ### RDK X5 调用流程
 
 #### 加载模型
@@ -49,6 +57,9 @@ output_names = model.output_names[model_name]
 RDK X5 视觉模型常见输入为 packed NV12 格式，Y 和 UV 拼接为单个输入 tensor：
 
 ```python
+from utils.py_utils.image import bgr_to_nv12_planes
+import numpy as np
+
 y, uv = bgr_to_nv12_planes(resized_img)
 packed_nv12 = np.concatenate([y.reshape(-1), uv.reshape(-1)]).astype(np.uint8)
 
@@ -64,7 +75,8 @@ result = outputs[model_name][output_names[0]]
 
 #### 详细 API 文档
 
-👉 [RDK X5 hbm_runtime Python API 文档](https://developer.d-robotics.cc/rdk_x_doc/Basic_Application/multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/ai-python-api)
+- Python API：👉 [RDK X5 hbm_runtime Python API 文档](https://developer.d-robotics.cc/rdk_x_doc/Basic_Application/multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/ai-python-api)
+- C/C++ API：👉 [RDK X5 `hb_dnn` Runtime 开发文档](https://developer.d-robotics.cc/oe_x5_doc/cn/oe_mapper/source/runtime.html)
 
 </DocScope>
 
@@ -88,6 +100,8 @@ output_names = model.output_names[model_name]
 RDK S 系列视觉模型使用分离的 Y 和 UV 两个输入 tensor：
 
 ```python
+from utils.py_utils.image import bgr_to_nv12_planes
+
 y, uv = bgr_to_nv12_planes(resized_img)
 
 inputs = {
@@ -107,12 +121,13 @@ result = outputs[model_name][output_names[0]]
 
 #### 详细 API 文档
 
-👉 [RDK S hbm_runtime Python API 文档](https://developer.d-robotics.cc/rdk_s_doc/Algorithm_Application/python-api)
+- Python API：👉 [RDK S hbm_runtime Python API 文档](https://developer.d-robotics.cc/rdk_s_doc/Algorithm_Application/python-api)
+- C/C++ UCP API：👉 [UCP（`hb_ucp`）接口总览](https://developer.d-robotics.cc/oe_s_doc/guide/ucp/ucp_overview)
+- 大模型工具链：👉 [S100 OE LLM 手册](https://developer.d-robotics.cc/oe_llm_s100p_doc/index.html) · [S600 OE LLM 手册](https://developer.d-robotics.cc/oe_llm_doc/index.html)
 
 </DocScope>
 
-
-## bpu_infer_lib 接口
+## bpu_infer_lib 接口（历史归档）
 
 `bpu_infer_lib_x3` 与 `bpu_infer_lib_x5` 安装后均通过 `import bpu_infer_lib` 导入。
 
@@ -120,28 +135,32 @@ RDK X3 使用 `bpu_infer_lib_x3` wheel，`rdk_x5_legacy` 分支使用 `bpu_infer
 
 :::caution
 
-`bpu_infer_lib` **对 featuremap 输入模型支持不佳**。如需使用 featuremap 输入模型，请使用 `hbm_runtime` 推理接口（RDK X5 或 RDK S 系列）。
+`bpu_infer_lib` **对 featuremap 输入模型支持不佳**。如需使用 featuremap 输入模型，请使用 `main` 分支的 `hbm_runtime` 推理接口（RDK X5 或 RDK S 系列）。
 
 :::
 
 ### 安装
 
 <DocScope versions=">=3.0.0" products="RDK X3">
+
 RDK X3：
 
 ```bash
 wget -nc https://archive.d-robotics.cc/downloads/rdk_model_zoo/rdk_x3/bpu_infer_lib_x3-1.0.3-py3-none-any.whl
 pip install bpu_infer_lib_x3-1.0.3-py3-none-any.whl
 ```
+
 </DocScope>
 
 <DocScope versions=">=3.5.0" products="RDK X5">
+
 RDK X5（`rdk_x5_legacy` 分支）：
 
 ```bash
 wget -nc https://archive.d-robotics.cc/downloads/rdk_model_zoo/rdk_x5/bpu_infer_lib_x5-1.0.3-py3-none-any.whl
 pip install bpu_infer_lib_x5-1.0.3-py3-none-any.whl
 ```
+
 </DocScope>
 
 ### 基础调用流程
@@ -169,13 +188,13 @@ result = inf.outputs[0].data
 | `get_output()` | 获取推理输出。 |
 | `outputs[index].data` | 读取指定输出 tensor 的 numpy 数据。 |
 
-## hobot_dnn.pyeasy_dnn 接口
+## hobot_dnn.pyeasy_dnn 接口（历史归档）
 
-`hobot_dnn.pyeasy_dnn` 是板端系统自带的 Python 推理接口。RDK X3 的 YOLO、FCOS、YOLOv8-Seg 等 demo 使用该接口；`rdk_x5_legacy` 分支的部分 demo 也使用该接口。
+`hobot_dnn.pyeasy_dnn` 是板端系统自带的早期 Python 推理接口。RDK X3 的 YOLO、FCOS、YOLOv8-Seg 等 demo 使用该接口；`rdk_x5_legacy` 分支的部分 demo 也使用该接口。
 
 :::caution
 
-`hobot_dnn.pyeasy_dnn` **对 featuremap 输入模型支持不佳**。如需使用 featuremap 输入模型，请使用 `hbm_runtime` 推理接口（RDK X5 或 RDK S 系列）。
+`hobot_dnn.pyeasy_dnn` **对 featuremap 输入模型支持不佳**。如需使用 featuremap 输入模型，请使用 `main` 分支的 `hbm_runtime` 推理接口（RDK X5 或 RDK S 系列）。
 
 :::
 
@@ -195,7 +214,7 @@ outputs = model.forward(input_tensor)
 
 | 平台 | 推荐接口 | 使用说明 |
 | :--- | :--- | :--- |
-| RDK X5，RDK OS >= 3.5.0 | `hbm_runtime` | `rdk_x5` 分支，按 sample README 使用 |
+| RDK X5，RDK OS >= 3.5.0 | `hbm_runtime`（Python）/ `hb_dnn`（C++） | 推荐 `main` 分支，按 sample `README_cn.md` 使用 |
+| RDK S100 / S100P / S600 | `hbm_runtime`（Python）/ `hb_ucp`（C++）/ OELLM SDK（LLM） | 推荐 `main` 分支，按 sample `README_cn.md` 使用 |
 | RDK X5（历史 demo） | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | `rdk_x5_legacy` 分支，按目标目录 README 使用 |
-| RDK X3 | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | `rdk_x3` 分支，按目标目录 README 使用 |
-| RDK S 系列 | `hbm_runtime` | `rdk_s` 分支，按 sample README 使用 |
+| RDK X3（归档） | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | `rdk_x3` 分支，按目标目录 README 使用 |

@@ -7,13 +7,19 @@ sidebar_products: "RDK-X3"
 
 ## Branch and System Requirements
 
-RDK X3 uses the `rdk_x3` branch. Recommended system version: RDK OS >= 3.0.0.
+RDK X3 uses the archived `rdk_x3` branch. Recommended system version: RDK OS >= 3.0.0.
 
 ```bash
 git clone https://github.com/D-Robotics/rdk_model_zoo.git
 cd rdk_model_zoo
 git checkout rdk_x3
 ```
+
+:::info
+
+`rdk_x3` is an archive-only branch for RDK X3 and is no longer an active adaptation target. Latest models for RDK X5 / S100 / S100P / S600 are maintained on the unified `main` branch and can be browsed in the [Web Model Catalog](https://d-robotics.github.io/rdk_model_zoo/).
+
+:::
 
 ## Repository Directory Structure
 
@@ -54,7 +60,7 @@ Which interface to use depends on the target demo directory README and source en
 
 :::caution
 
-`bpu_infer_lib_x3` and `hobot_dnn.pyeasy_dnn` **have poor support for featuremap input models**. If you need to run featuremap input models, consider using C++ interfaces or upgrading to the RDK X5 platform with the `hbm_runtime` inference interface.
+`bpu_infer_lib_x3` and `hobot_dnn.pyeasy_dnn` **have poor support for featuremap input models**. If you need to run featuremap input models, consider using C++ interfaces or upgrading to the RDK X5 / S series platform with the `hbm_runtime` inference interface.
 
 :::
 

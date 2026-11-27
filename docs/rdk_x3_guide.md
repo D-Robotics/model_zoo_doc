@@ -7,13 +7,19 @@ sidebar_products: "RDK-X3"
 
 ## 分支与系统要求
 
-RDK X3 使用 `rdk_x3` 分支，推荐系统版本 RDK OS >= 3.0.0 。
+RDK X3 使用归档分支 `rdk_x3`，推荐系统版本 RDK OS >= 3.0.0。
 
 ```bash
 git clone https://github.com/D-Robotics/rdk_model_zoo.git
 cd rdk_model_zoo
 git checkout rdk_x3
 ```
+
+:::info
+
+`rdk_x3` 为 RDK X3 历史归档分支，不再作为新模型适配目标。RDK X5 / S100 / S100P / S600 的最新模型示例统一维护在 `main` 分支，可在 [在线模型目录](https://d-robotics.github.io/rdk_model_zoo/) 中浏览。
+
+:::
 
 ## 仓库目录结构
 
@@ -54,7 +60,7 @@ RDK X3 分支的 Python 推理接口有两种：
 
 :::caution
 
-`bpu_infer_lib_x3` 和 `hobot_dnn.pyeasy_dnn` **对 featuremap 输入模型支持不佳**。如需推理 featuremap 输入模型，建议使用 C++ 接口或升级到 RDK X5 平台并使用 `hbm_runtime` 推理接口。
+`bpu_infer_lib_x3` 和 `hobot_dnn.pyeasy_dnn` **对 featuremap 输入模型支持不佳**。如需推理 featuremap 输入模型，建议使用 C++ 接口或升级到 RDK X5 / S 系列平台并使用 `hbm_runtime` 推理接口。
 
 :::
 
