@@ -10,27 +10,35 @@ import DocScope from '@site/src/components/DocScope';
 
 ## Overview
 
-Model Zoo Python inference interfaces are selected by hardware platform and branch:
+Model Zoo inference interfaces are selected by hardware platform and branch. On the unified **`main`** branch (v2.0.0+), vision, speech, and robotics Python samples for both RDK X5 and RDK S series (S100 / S100P / S600) uniformly use **`hbm_runtime`**, C++ samples use `hb_dnn` / `hb_ucp`, and on-device LLM / VLM samples use native C++ or the official OELLM SDK:
 
-| Platform | Branch | Inference Interface | Interface Source |
-| :--- | :--- | :--- | :--- |
-| RDK X5 | `rdk_x5` | `hbm_runtime` | Board-builtin |
-| RDK X5 (legacy) | `rdk_x5_legacy` | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | Manual install / Board-builtin |
-| RDK X3 | `rdk_x3` | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | Manual install / Board-builtin |
-| RDK S Series | `rdk_s` | `hbm_runtime` | Board-builtin |
+| Platform | Branch | Python Interface | C/C++ Interface | Source |
+| :--- | :--- | :--- | :--- | :--- |
+| **RDK X5** | `main` (recommended) / `rdk_x5` | `hbm_runtime` | `hb_dnn` | Board-builtin |
+| **RDK S Series** | `main` (recommended) / `rdk_s` | `hbm_runtime` | `hb_ucp` / `hb_dnn` / OELLM | Builtin / OELLM SDK |
+| RDK X5 (legacy) | `rdk_x5_legacy` | `bpu_infer_lib_x5` / `pyeasy_dnn` | `hb_dnn` | Manual / Builtin |
+| RDK X3 (archive) | `rdk_x3` | `bpu_infer_lib_x3` / `pyeasy_dnn` | `hb_dnn` | Manual / Builtin |
 
 ## hbm_runtime Interface
 
-`hbm_runtime` is the unified Python inference interface used by both RDK X5 and RDK S series. The interface name is identical, but the underlying dependencies, model formats, and input handling differ:
+`hbm_runtime` is the unified Python inference interface used by both RDK X5 and RDK S series. The interface name is identical, while underlying dependencies, model formats, and NV12 input handling differ:
 
-| Item | RDK X5 | RDK S Series |
+| Item | RDK X5 | RDK S Series (S100 / S100P / S600) |
 | :--- | :--- | :--- |
 | Underlying Dependency | `libdnn` | `libhbucp` |
-| Model Format | `.bin` | `.hbm` |
+| Model Format | `.bin` (Bayes-E) | `.hbm` (Nash-E / Nash-M / Nash-P) |
 | Package | `hobot-spdev` (board-builtin) | `hobot-dnn` (board-builtin) |
 | NV12 Input Style | Single packed input (Y+UV concatenated) | Dual inputs (Y and UV separated) |
+| Shared Repo Wrapper | `utils/py_utils/runtime.py` (`RuntimeSession`) | `utils/py_utils/runtime.py` (`RuntimeSession`) |
+
+:::tip
+
+On the unified `main` branch, `utils/py_utils/runtime.py` (`RuntimeSession`) and `utils/py_utils/platforms.py` wrap `hbm_runtime` with board identity detection, target validation, and session lifecycle management, while each sample implements `preprocess → infer → postprocess` in its own `<task>.py`.
+
+:::
 
 <DocScope versions=">=3.5.0" products="RDK X5">
+
 ### RDK X5 Call Flow
 
 #### Load Model
@@ -49,6 +57,9 @@ output_names = model.output_names[model_name]
 RDK X5 vision models commonly use packed NV12 format, where Y and UV planes are concatenated into a single input tensor:
 
 ```python
+from utils.py_utils.image import bgr_to_nv12_planes
+import numpy as np
+
 y, uv = bgr_to_nv12_planes(resized_img)
 packed_nv12 = np.concatenate([y.reshape(-1), uv.reshape(-1)]).astype(np.uint8)
 
@@ -64,11 +75,13 @@ result = outputs[model_name][output_names[0]]
 
 #### Detailed API Documentation
 
-[RDK X5 hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_x_doc/en/Basic_Application/multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/ai-python-api)
+- Python API: 👉 [RDK X5 hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_x_doc/en/Basic_Application/multi_media_sp_dev_api/RDK_X5/pydev_multimedia_api_x5/ai-python-api)
+- C/C++ API: 👉 [RDK X5 `hb_dnn` Runtime Development Docs](https://developer.d-robotics.cc/oe_x5_doc/cn/oe_mapper/source/runtime.html)
 
 </DocScope>
 
 <DocScope versions=">=4.0.5">
+
 ### RDK S Series Call Flow
 
 #### Load Model
@@ -87,6 +100,8 @@ output_names = model.output_names[model_name]
 RDK S series vision models use separated Y and UV input tensors:
 
 ```python
+from utils.py_utils.image import bgr_to_nv12_planes
+
 y, uv = bgr_to_nv12_planes(resized_img)
 
 inputs = {
@@ -106,12 +121,13 @@ result = outputs[model_name][output_names[0]]
 
 #### Detailed API Documentation
 
-[RDK S hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_s_doc/en/Algorithm_Application/python-api)
+- Python API: 👉 [RDK S hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_s_doc/en/Algorithm_Application/python-api)
+- C/C++ UCP API: 👉 [UCP (`hb_ucp`) Overview](https://developer.d-robotics.cc/oe_s_doc/en/guide/ucp/ucp_overview)
+- LLM Toolchains: 👉 [S100 OE LLM Manual](https://developer.d-robotics.cc/oe_llm_s100p_doc/index.html) · [S600 OE LLM Manual](https://developer.d-robotics.cc/oe_llm_doc/index.html)
 
 </DocScope>
 
-
-## bpu_infer_lib Interface
+## bpu_infer_lib Interface (Legacy Archive)
 
 After installing `bpu_infer_lib_x3` or `bpu_infer_lib_x5`, import the runtime package with `import bpu_infer_lib`.
 
@@ -119,7 +135,7 @@ RDK X3 uses the `bpu_infer_lib_x3` wheel, and the `rdk_x5_legacy` branch uses th
 
 :::caution
 
-`bpu_infer_lib` **has poor support for featuremap input models**. If you need to use featuremap input models, please use the `hbm_runtime` inference interface (RDK X5 or RDK S series).
+`bpu_infer_lib` **has poor support for featuremap input models**. If you need to use featuremap input models, please use the `hbm_runtime` inference interface on the `main` branch (RDK X5 or RDK S series).
 
 :::
 
@@ -172,13 +188,13 @@ result = inf.outputs[0].data
 | `get_output()` | Fetch inference outputs. |
 | `outputs[index].data` | Read the numpy data of the specified output tensor. |
 
-## hobot_dnn.pyeasy_dnn Interface
+## hobot_dnn.pyeasy_dnn Interface (Legacy Archive)
 
-`hobot_dnn.pyeasy_dnn` is a board-builtin Python inference interface. RDK X3 YOLO, FCOS, and YOLOv8-Seg demos use this interface; some demos in the `rdk_x5_legacy` branch also use this interface.
+`hobot_dnn.pyeasy_dnn` is an early board-builtin Python inference interface used by RDK X3 demos (YOLO, FCOS, YOLOv8-Seg, etc.) and some demos in `rdk_x5_legacy`.
 
 :::caution
 
-`hobot_dnn.pyeasy_dnn` **has poor support for featuremap input models**. If you need to use featuremap input models, please use the `hbm_runtime` inference interface (RDK X5 or RDK S series).
+`hobot_dnn.pyeasy_dnn` **has poor support for featuremap input models**. If you need to use featuremap input models, please use the `hbm_runtime` inference interface on the `main` branch (RDK X5 or RDK S series).
 
 :::
 
@@ -198,7 +214,7 @@ The target directory README and source entry point define the model path, input 
 
 | Platform | Recommended Interface | Usage Notes |
 | :--- | :--- | :--- |
-| RDK X5, RDK OS >= 3.5.0 | `hbm_runtime` | `rdk_x5` branch, follow sample README |
-| RDK X5 (legacy demos) | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | `rdk_x5_legacy` branch, follow target directory README |
-| RDK X3 | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | `rdk_x3` branch, follow target directory README |
-| RDK S Series | `hbm_runtime` | `rdk_s` branch, follow sample README |
+| RDK X5, RDK OS >= 3.5.0 | `hbm_runtime` (Python) / `hb_dnn` (C++) | Recommended `main` branch; follow each sample's `README.md` |
+| RDK S100 / S100P / S600 | `hbm_runtime` (Python) / `hb_ucp` (C++) / OELLM SDK (LLM) | Recommended `main` branch; follow each sample's `README.md` |
+| RDK X5 (legacy demos) | `bpu_infer_lib_x5` / `hobot_dnn.pyeasy_dnn` | `rdk_x5_legacy` branch; follow target directory README |
+| RDK X3 (archive) | `bpu_infer_lib_x3` / `hobot_dnn.pyeasy_dnn` | `rdk_x3` branch; follow target directory README |

@@ -7,89 +7,98 @@ sidebar_products: "RDK S100, RDK S600"
 
 ## Branch and System Requirements
 
-RDK S series (S100 / S600) uses the `rdk_s` branch as the main delivery branch. Recommended system version: RDK OS >= 4.0.5. Python samples in this branch uniformly use the `hbm_runtime` inference interface.
+Starting from **v2.0.0**, the RDK S series (**RDK S100 / S100P / S600**) and RDK X5 are maintained together on the default **`main`** branch. A single `samples/` directory targets all boards via `--target` or `--platform` (`auto` / `s100` / `s100p` / `s600`).
+
+- **RDK S100 / S100P**: Recommended OS **RDK OS >= 4.0.5** (or matching board image and runtime for published artifacts)
+- **RDK S600**: Recommended OS **RDK OS >= 5.1.0** (LLM / VLM samples also require the matching OELLM SDK Runtime described in each sample's README)
 
 ```bash
 git clone https://github.com/D-Robotics/rdk_model_zoo.git
 cd rdk_model_zoo
-git checkout rdk_s
 ```
 
 :::tip
 
-Legacy demos for the RDK S series are retained in the [RDK Model Zoo S](https://github.com/d-Robotics/rdk_model_zoo_s) repository. The `rdk_s` branch is the reorganized new version.
+- **`main`** is the stable release delivery branch and is recommended for all new work. Browse models by board (S100 / S100P / S600), compare measured FPS and accuracy, and copy commands in the **[Web Model Catalog](https://d-robotics.github.io/rdk_model_zoo/)**.
+- Legacy per-board branch `rdk_s` and early repository [RDK Model Zoo S](https://github.com/D-Robotics/rdk_model_zoo_s) remain archived for historical compatibility.
 
 :::
 
 ## Repository Directory Structure
 
-The `rdk_s` branch uses a standardized directory structure, organized by domain and model:
+The unified `main` branch organizes RDK S series samples across Vision, LLM / VLM, Speech, and Embodied VLA:
 
-```bash
+```text
 rdk_model_zoo/
-|-- samples/
-|   |-- vision/                  # Vision model examples
-|   |   |-- ultralytics_yolo/    # Detection / Seg / Pose / CLS (YOLOv5u~YOLO12)
-|   |   |-- ultralytics_yolo26/  # Detection / Seg / Pose / OBB / CLS (YOLO26)
-|   |   |-- yolov5/              # Object detection
-|   |   |-- yolo11/              # Object detection
-|   |   |-- yolo11_seg/          # Instance segmentation
-|   |   |-- yolo11_pose/         # Pose estimation
-|   |   |-- yoloe11_seg/         # Instance segmentation (prompt-free)
-|   |   |-- yolov13_imoonlab/    # Object detection
-|   |   |-- bytetrack/           # Multi-object tracking
-|   |   |-- resnet18/            # Image classification
-|   |   |-- resnet50/            # Image classification
-|   |   |-- resnet152/           # Image classification
-|   |   |-- mobilenetv1/         # Image classification
-|   |   |-- mobilenetv2/         # Image classification
-|   |   |-- mobilenetv3/         # Image classification
-|   |   |-- mobilenetv4/         # Image classification
-|   |   |-- efficientnet/        # Image classification
-|   |   |-- vit/                 # Image classification
-|   |   |-- 3dresnet/            # Video action classification
-|   |   |-- unetmobilenet/       # Semantic segmentation
-|   |   |-- depth_anything_v2/   # Monocular depth estimation
-|   |   |-- siglip/              # Vision encoder for VLM / VLA
-|   |   |-- pointnet/            # Point cloud part segmentation
-|   |   |-- lanenet/             # Lane detection
-|   |   `-- paddle_ocr/          # OCR text detection and recognition
-|   |-- speech/                  # Speech model examples
-|   |   |-- asr/                 # Speech recognition
-|   |   `-- kws/                 # Keyword spotting
-|   `-- vla/                     # Embodied AI / robot policy
-|       `-- act/                 # Action Chunking Transformer
-|-- datasets/                    # Public datasets and sample data
-|-- docs/                        # Project specs and reference documentation
-|-- tools/                       # Conversion/build/utility tools
-|-- tros/                        # TROS integration guides and examples
-`-- utils/                       # Shared Python / C++ utilities
+├── samples/
+│   ├── vision/                   # Computer vision & multimodal samples (unified X5 / S)
+│   │   ├── ultralytics_yolo/     # Detect / Seg / Pose / Cls / OBB (YOLOv5u–YOLO26)
+│   │   ├── yolov5/               # Object detection
+│   │   ├── yoloe/                # Prompt-free instance segmentation
+│   │   ├── fasterrcnn/           # Object detection & person tracking
+│   │   ├── bytetrack/            # Multi-object tracking
+│   │   ├── hobot_mot/            # Multi-object tracking (IOU 2.0)
+│   │   ├── osnet/                # Person re-identification
+│   │   ├── resnet/               # Image classification (ResNet-18/34/50/101/152)
+│   │   ├── mobilenetv1..v4/      # Image classification (v1 / v2 / v3 / v4)
+│   │   ├── efficientnet/         # Image classification
+│   │   ├── vit/                  # Image classification
+│   │   ├── 3dresnet/             # Video action classification
+│   │   ├── efficient_sam/        # Promptable segmentation
+│   │   ├── mobile_sam/           # Promptable segmentation
+│   │   ├── unetmobilenet/        # Semantic segmentation
+│   │   ├── depth_anything_v2/    # Monocular depth estimation
+│   │   ├── yolo26_depth/         # Monocular depth estimation
+│   │   ├── paddle_ocr/           # OCR text detection and recognition
+│   │   ├── lanenet/              # Lane detection
+│   │   ├── pointnet/             # Point cloud part segmentation
+│   │   ├── dinov2/               # Vision feature encoder
+│   │   ├── siglip/               # Vision-language encoder
+│   │   ├── lite_avatar/          # Audio-driven talking avatar
+│   │   └── diffusiondrive/       # End-to-end driving planning
+│   ├── llm/                      # On-device LLM & VLM runtimes (native C++ / OELLM SDK)
+│   │   ├── oellm/                # Official OELLM SDK 2.0.0 S600 suite (32 profiles)
+│   │   ├── gemma4/               # Gemma4 E2B / E4B text generation (OELLM SDK 2.0.0, S600)
+│   │   ├── gemma4-e2b/           # Gemma4-E2B VLM chat & HTTP server (native C++)
+│   │   └── minicpm5-2b/          # MiniCPM5-2B text generation (native C++)
+│   ├── speech/                   # Speech processing samples
+│   │   ├── asr/                  # Speech recognition (Wav2Vec2 / XLSR53)
+│   │   ├── paraformer/           # Paraformer Chinese ASR
+│   │   └── kws/                  # Keyword spotting
+│   └── vla/                      # Embodied AI / robot policies (pinned Git submodules)
+│       ├── act/                  # S100 ACT (Action Chunking Transformer)
+│       └── pi0/                  # S600 ACT / Pi0 integration
+├── datasets/                     # Public datasets and label files
+├── docs/                         # Standards, release manifests (docs/release/s/) & guides
+├── skills/                       # RDK Model Zoo Agent Skills pack
+└── utils/                        # Shared Python (py_utils/), C++ (c_utils/) & validation tools
 ```
 
 ## Individual Sample Structure
 
-Each RDK S sample contains the following standardized directories:
+Each standard sample contains the following directories:
 
-```bash
+```text
 sample_name/
-|-- README.md              # English documentation
-|-- README_cn.md           # Chinese documentation
-|-- conversion/            # ONNX → HBM conversion configs
-|-- evaluator/             # Accuracy and performance evaluation
-|-- model/                 # Pre-compiled .hbm models + download scripts
-|-- runtime/
-|   |-- python/            # Python inference (main.py, <model>.py, run.sh)
-|   `-- cpp/               # C++ inference (src/main.cc, CMakeLists.txt, run.sh)
-`-- test_data/             # Test images and inference results
+├── README.md              # English documentation
+├── README_cn.md           # Chinese documentation
+├── conversion/            # ONNX export & OpenExplorer quantization recipes
+├── evaluator/             # Dataset accuracy and performance evaluation
+├── model/                 # Model manifest docs & download scripts (.hbm binaries not committed)
+├── runtime/
+│   ├── python/            # Python inference (main.py, cli.py, <task>.py, run.sh)
+│   └── cpp/               # C++ inference (CMakeLists.txt, src/, run.sh)
+├── test_data/             # Sample inputs and reference outputs
+└── tests/                 # Host unit tests and numerical regression checks
 ```
 
 ## Inference Interface
 
-The RDK S series Python samples uniformly use the `hbm_runtime` inference interface, which shares the same interface name as RDK X5's `hbm_runtime`, but with different underlying dependencies: RDK S series is based on `libhbucp`, while RDK X5 is based on `libdnn`.
+RDK S series vision and speech Python samples uniformly use `hbm_runtime`, sharing the same Python API name as RDK X5 while targeting `libhbucp` underneath (whereas RDK X5 targets `libdnn`).
 
-For the complete interface reference [RDK S hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_s_doc/en/Algorithm_Application/python-api)
-
-C/C++ inference interface documentation: **UCP (`hb_ucp`) Interface Documentation** 👉 [Overview](https://developer.d-robotics.cc/oe_s_doc/en/guide/ucp/ucp_overview)
+- Python API: 👉 [RDK S hbm_runtime Python API Documentation](https://developer.d-robotics.cc/rdk_s_doc/en/Algorithm_Application/python-api)
+- C/C++ UCP API: **UCP (`hb_ucp`) Interface Documentation** 👉 [Overview](https://developer.d-robotics.cc/oe_s_doc/en/guide/ucp/ucp_overview)
+- LLM Toolchains: 👉 [S100 OE LLM Manual](https://developer.d-robotics.cc/oe_llm_s100p_doc/index.html) · [S600 OE LLM Manual](https://developer.d-robotics.cc/oe_llm_doc/index.html)
 
 ### hbm_runtime Basic Call Flow
 
@@ -98,7 +107,7 @@ C/C++ inference interface documentation: **UCP (`hb_ucp`) Interface Documentatio
 ```python
 import hbm_runtime
 
-model = hbm_runtime.HB_HBMRuntime("../../model/yolov5x_672x672_nv12.hbm")
+model = hbm_runtime.HB_HBMRuntime("../../model/s100/yolov5x_672x672_nv12.hbm")
 model_name = model.model_names[0]
 input_names = model.input_names[model_name]
 output_names = model.output_names[model_name]
@@ -124,13 +133,13 @@ Command-line parameter equivalents:
 
 #### Prepare Inputs
 
-RDK S vision samples commonly use separated NV12 format (Y plane and UV plane as two separate inputs), unlike RDK X5's single packed NV12 input:
+RDK S vision samples commonly use separated NV12 inputs (Y plane and UV plane as two named input tensors), unlike RDK X5's single packed NV12 input:
 
 ```python
 inputs = {
     model_name: {
-        input_names[0]: y_plane,    # Y plane
-        input_names[1]: uv_plane,   # UV plane
+        input_names[0]: y_plane,    # Y plane (1, H, W, 1)
+        input_names[1]: uv_plane,   # UV plane (1, H/2, W/2, 2)
     }
 }
 ```
@@ -143,118 +152,144 @@ raw_outputs = outputs[model_name]
 output_tensor = raw_outputs[output_names[0]]
 ```
 
+### Model Zoo Python Runtime Structure
 
-### Model Zoo Wrapper Flow
-
-RDK S samples follow the `Config + Model + predict()` pattern:
+Unified Python samples follow [`docs/sample-standards/runtime-code.md`](https://github.com/D-Robotics/rdk_model_zoo/blob/main/docs/sample-standards/runtime-code.md), separating `main.py`, `cli.py`, and a task-named model file (such as `classify.py`, `detect.py`, or `segment.py`). Each named model class exposes a clean `preprocess → infer → postprocess` chain wired by `predict()`:
 
 ```python
-config = YOLOv5Config(
-    model_path="../../model/yolov5x_672x672_nv12.hbm",
-    classes_num=80,
-    score_thres=0.25,
-    nms_thres=0.45,
-)
-
-model = YoloV5X(config)
-model.set_scheduling_params(priority=0, bpu_cores=[0])
-results = model.predict(image)
+class ResNetClassifier:
+    def predict(self, image):
+        inputs = self.preprocess(image)
+        outputs = self.infer(inputs)
+        return self.postprocess(outputs)
 ```
 
-The wrapper executes in the following order:
-
-1. `pre_process()`: Generate model inputs (resize, BGR-to-NV12 with separated Y/UV planes)
-2. `forward()`: Call `hbm_runtime.run()`
-3. `post_process()`: Parse detection boxes, classification results, segmentation masks, or pose keypoints
-4. `predict()`: Chain the complete flow
+On-device LLM / VLM samples (`samples/llm/*`) provide native C++ and official OELLM SDK Runtime launchers; follow each sample's `README.md` to prepare models and build.
 
 ## Quick Start
 
-### Run the YOLOv5 Detection Sample
+### 1. Run the Ultralytics YOLO11x Detection Sample (Python)
+
+Example on **RDK S100** (replace `--platform s100` with `s100p` or `s600` on S100P / S600):
 
 ```bash
-# Download model
-cd samples/vision/yolov5/model
-bash download_model.sh
+# 1. Download the precompiled BPU model (.hbm)
+cd samples/vision/ultralytics_yolo/model
+bash download_model.sh --platform s100 --family yolo11 --task detect --model-size x
 
-# Run inference
+# 2. Run on-board inference
 cd ../runtime/python
 python3 main.py \
-  --model-path ../../model/yolov5x_672x672_nv12.hbm \
-  --test-img ../../test_data/kite.jpg \
-  --label-file ../../test_data/coco_classes.names \
-  --img-save-path result.jpg
+  --task detect \
+  --platform s100 \
+  --family yolo11 \
+  --model-size x \
+  --test-img ../../test_data/bus.jpg \
+  --img-save-path ../../test_data/inference_yolo11x.jpg
 ```
 
-### Using run.sh for One-Click Execution
+### 2. Host Preview and Manifest Listing
 
-Each sample provides a `run.sh` script in its `runtime/python/` and `runtime/cpp/` directories for one-click environment setup, model download, and inference:
+On a development host or board, use `--list-models` and `--dry-run` to inspect supported artifacts and tensor contracts without loading `hbm_runtime`:
 
 ```bash
-# Python inference
-cd samples/vision/yolov5/runtime/python
-bash run.sh
-
-# C++ inference
-cd samples/vision/yolov5/runtime/cpp
-bash run.sh
+python3 samples/vision/ultralytics_yolo/runtime/python/main.py --platform s100 --list-models
+python3 samples/vision/ultralytics_yolo/runtime/python/main.py --platform s600 --family yolo26 --task cls --dry-run
 ```
 
-## Model Coverage
+### 3. Using run.sh and C++ Entry Points
+
+Each sample provides a `run.sh` launcher under `runtime/python/` and `runtime/cpp/` that locates the entry point and forwards arguments and exit codes verbatim.
+
+:::note
+
+Under the unified runtime contract, `run.sh` does not automatically install dependencies or download models. Prepare the target board's model first per `model/README.md`, then run inference.
+
+:::
+
+```bash
+# Example: download and run YOLOv5x-672 detection on RDK S100
+python3 -m samples.vision.yolov5.model.download --target s100 --variant x-672 --output-dir samples/vision/yolov5/model
+bash samples/vision/yolov5/runtime/python/run.sh --target s100 --variant x-672
+```
+
+### 4. Initialize Embodied VLA Submodules (ACT / Pi0)
+
+ACT and Pi0 are integrated via pinned Git submodules (`act/` for S100 ACT; `pi0/` for S600 ACT and Pi0). Initialize them from the repository root and follow `samples/vla/README.md`:
+
+```bash
+git submodule sync -- samples/vla/act samples/vla/pi0
+git submodule update --init --checkout samples/vla/act samples/vla/pi0
+```
+
+## Model Coverage (RDK S Series)
+
+The tables below list the main **RDK S100 / S100P / S600** samples in the unified `main` branch. See each sample's `README.md`, `docs/release/s/models.yaml`, or the [Web Model Catalog](https://d-robotics.github.io/rdk_model_zoo/) for variants, C++ support, newly converted artifacts, and measured benchmarks.
 
 ### Vision
 
 | Category | Model | Sample Directory | Supported Platforms |
 | :--- | :--- | :--- | :--- |
-| Vision Multi-task | Ultralytics YOLO (YOLOv5u / YOLOv8 / YOLOv9 / YOLOv10 / YOLO11 / YOLO12) | `samples/vision/ultralytics_yolo` | S100 / S100P / S600 |
-| Vision Multi-task | YOLO26 | `samples/vision/ultralytics_yolo26` | S100 / S100P / S600 |
-| Object Detection | YOLOv5x | `samples/vision/yolov5` | S100 / S600 |
-| Object Detection | YOLO11 | `samples/vision/yolo11` | S100 / S600 |
-| Object Detection | YOLOv13 (iMoonLab) | `samples/vision/yolov13_imoonlab` | S100 |
-| Multi-Object Tracking | ByteTrack | `samples/vision/bytetrack` | S100 / S100P / S600 |
-| Instance Segmentation | YOLO11-Seg | `samples/vision/yolo11_seg` | S100 / S600 |
-| Instance Segmentation | YOLOe11-Seg (Prompt-Free) | `samples/vision/yoloe11_seg` | S100 |
-| Pose Estimation | YOLO11-Pose | `samples/vision/yolo11_pose` | S100 / S600 |
-| Image Classification | ResNet18 | `samples/vision/resnet18` | S100 / S600 |
-| Image Classification | ResNet50 | `samples/vision/resnet50` | S100 / S600 |
-| Image Classification | ResNet152 | `samples/vision/resnet152` | S100 / S600 |
-| Image Classification | MobileNetV1 | `samples/vision/mobilenetv1` | S100 |
-| Image Classification | MobileNetV2 | `samples/vision/mobilenetv2` | S100 / S600 |
-| Image Classification | MobileNetV3 | `samples/vision/mobilenetv3` | S100 |
-| Image Classification | MobileNetV4 | `samples/vision/mobilenetv4` | S100 |
-| Image Classification | EfficientNet-Lite | `samples/vision/efficientnet` | S100 |
+| Multi-Task Vision | Ultralytics YOLO (`YOLOv5u–YOLO26`) | `samples/vision/ultralytics_yolo` | S100/S100P/S600 |
+| Object Detection | YOLOv5 | `samples/vision/yolov5` | S100/S600 |
+| Detection / Tracking | Faster R-CNN MobileNetV3-Large | `samples/vision/fasterrcnn` | S100/S100P/S600 |
+| Multi-Object Tracking | ByteTrack | `samples/vision/bytetrack` | S100/S100P/S600 |
+| Multi-Object Tracking | HobotMot (IOU 2.0) | `samples/vision/hobot_mot` | S100/S100P/S600 |
+| Person Re-ID | OSNet x1.0 | `samples/vision/osnet` | S100/S100P/S600 |
+| Prompt-Free Seg | YOLOE | `samples/vision/yoloe` | S100/S100P |
+| Promptable Seg | EfficientSAM-Tiny | `samples/vision/efficient_sam` | S100/S100P/S600 |
+| Promptable Seg | MobileSAM | `samples/vision/mobile_sam` | S100/S100P/S600 |
+| Image Classification | ResNet (18/34/50/101/152) | `samples/vision/resnet` | S100/S100P/S600 |
+| Image Classification | MobileNetV1/V2/V3/V4 | `samples/vision/mobilenetv1..v4` | S100/S100P/S600 |
+| Image Classification | EfficientNet | `samples/vision/efficientnet` | S100/S600 |
 | Image Classification | ViT | `samples/vision/vit` | S100 |
-| Image Classification | 3D ResNet (Video Action) | `samples/vision/3dresnet` | S100 |
-| Semantic Segmentation | UnetMobileNet | `samples/vision/unetmobilenet` | S100 / S600 |
-| Monocular Depth Estimation | Depth Anything V2 | `samples/vision/depth_anything_v2` | S100 |
-| Vision Encoder | SigLIP | `samples/vision/siglip` | S100 / S100P |
-| Point Cloud Segmentation | PointNet | `samples/vision/pointnet` | S100 |
+| Video Action | 3D ResNet | `samples/vision/3dresnet` | S100 |
+| Semantic Seg | UNetMobileNet | `samples/vision/unetmobilenet` | S100/S600 |
+| Monocular Depth | Depth Anything V2 | `samples/vision/depth_anything_v2` | S100 |
+| Monocular Depth | YOLO26 Depth | `samples/vision/yolo26_depth` | S100/S100P/S600 |
+| OCR | PaddleOCR | `samples/vision/paddle_ocr` | S100/S600 |
 | Lane Detection | LaneNet | `samples/vision/lanenet` | S100 |
-| Text Recognition | PaddleOCR | `samples/vision/paddle_ocr` | S100 |
+| Point Cloud Seg | PointNet | `samples/vision/pointnet` | S100 |
+| Vision Encoder | DINOv2 | `samples/vision/dinov2` | S100/S100P/S600 |
+| Vision-Language | SigLIP | `samples/vision/siglip` | S100/S100P |
+| Talking Avatar | LiteAvatar | `samples/vision/lite_avatar` | S100/S100P/S600 |
+| End-to-End Driving | DiffusionDrive | `samples/vision/diffusiondrive` | S100P/S600 |
+
+### LLM / VLM
+
+| Category | Model | Sample Directory | Supported Platforms |
+| :--- | :--- | :--- | :--- |
+| LLM / VLM Suite | Official OELLM Suite (SDK 2.0.0, 32 profiles) | `samples/llm/oellm` | S600 |
+| Text Generation | Gemma4 E2B / E4B (SDK 2.0.0) | `samples/llm/gemma4` | S600 |
+| Vision-Language | Gemma4-E2B (native C++, chat/HTTP) | `samples/llm/gemma4-e2b` | S100/S100P/S600 |
+| Text Generation | MiniCPM5-2B (native C++) | `samples/llm/minicpm5-2b` | S100/S100P/S600 |
 
 ### Speech
 
 | Category | Model | Sample Directory | Supported Platforms |
 | :--- | :--- | :--- | :--- |
-| Speech Recognition | ASR (Wav2Vec2) | `samples/speech/asr` | S100 / S600 |
-| Speech Recognition | Paraformer (Chinese ASR, WAV input, three-stage INT16 HBM) | `samples/speech/paraformer` | S100 |
+| Speech Recognition | ASR (Wav2Vec2 / XLSR53) | `samples/speech/asr` | S100/S600 |
+| Speech Recognition | Paraformer (Chinese ASR, 3-stage INT16 HBM) | `samples/speech/paraformer` | S100 |
 | Keyword Spotting | KWS (MDTC) | `samples/speech/kws` | S100 |
 
 ### Embodied AI / Robot Policy (VLA)
 
 | Category | Model | Sample Directory | Supported Platforms |
 | :--- | :--- | :--- | :--- |
-| Robot Policy | ACT (Action Chunking Transformer) | `samples/vla/act` | S100 / S600 |
+| Action Policy | ACT (Action Chunking Transformer) | `samples/vla/act`, `samples/vla/pi0` | S100/S600 |
+| Embodied VLA | Pi0 | `samples/vla/pi0` | S600 |
 
-## Shared Utilities (utils/)
+## Shared Utilities (utils/py_utils/)
 
-The `rdk_s` branch provides the following shared Python utilities (`utils/py_utils/`):
+The unified `main` branch provides shared Python runtime and utility modules under `utils/py_utils/`:
 
 | Utility Module | Function |
 | :--- | :--- |
-| `file_io` | Model download, image loading, class name loading |
-| `preprocess` | BGR to NV12 (separated Y/UV planes), resize (direct/letterbox) |
-| `postprocess` | NMS, YOLO box/mask/keypoint decoding, coordinate scaling |
-| `visualize` | Detection box, segmentation mask, pose keypoint, classification result rendering |
-| `inspect` | SoC name detection, model info printing |
-| `nn_math` | Sigmoid, z-score normalization |
+| `runtime`, `model_runner`, `single_array_runner` | Load BPU models via `hbm_runtime`, classification & named-array tensor bindings |
+| `platforms`, `platform_profile` | Board identity resolution (`auto`/`x5`/`s100`/`s100p`/`s600`) and platform checks |
+| `assets`, `cls_binding`, `sam_binding` | Read `docs/release/{x5,s}/models.yaml` manifests and tensor contracts |
+| `image`, `file_io`, `preprocess`, `tensor_io` | Image/file loading, resize (direct/letterbox), and separated Y/UV NV12 conversion |
+| `labels`, `classification` | Label loading/validation and Top-K classification helpers |
+| `runtime_meta`, `quantization`, `nn_math`, `postprocess` | Metadata parsing, dequantization, NMS, and YOLO detect/seg/pose/OBB decoding |
+| `sam_runner`, `sam_stages`, `yoloe26_decode` | SAM encoder/decoder runners and YOLOE26 prompt-free decoding |
+| `text_metrics`, `visualize`, `inspect` | Speech CER / edit distance, detection/segmentation/pose visualization & model inspection |

@@ -48,3 +48,12 @@ sidebar_position: 7
 | model | platform | dtype | seqlen | max context | TTFT(ms) | TPS | memory(GB) |
 |-------|----------|-------|--------|-------------|----------|-----|------------|
 | Qwen2.5-Omni-3B | S100P | q8 | 256 | 2048 | 285 | 14.03 | 5.5 |
+
+### Model Zoo Native C++ Samples (MiniCPM5-2B / Gemma4-E2B VLM)
+
+Measured reference data for native C++ on-device LLM/VLM samples in the Model Zoo `main` branch on S100 / S100P:
+
+| model | platform | runtime / dtype | max context | Decode (TPS) | Notes | GitHub Repository |
+| :--- | :--- | :--- | ---: | ---: | :--- | :--- |
+| MiniCPM5-2B | S100 / S100P | OELLM 1.0.0 W8 | 2048 | ~12.1 / ~13.0 | Short-prompt decode; full WikiText2 PPL 17.92 | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/llm/minicpm5-2b) |
+| Gemma4-E2B VLM | S100P | Native C++ (Vision + Text HBM) | 4096 | ~6.9 | Text multi-turn & image-text multimodal chat | [GitHub](https://github.com/D-Robotics/rdk_model_zoo/tree/main/samples/llm/gemma4-e2b) |
